@@ -108,11 +108,24 @@ class SCSSCompiler {
       }
 
       const outputDir = path.dirname(finalOutputPath);
+      this.logger?.debug(`输出目录: ${outputDir}`);
+      
       if (!fs.existsSync(outputDir)) {
+        this.logger?.debug(`创建输出目录: ${outputDir}`);
         fs.mkdirSync(outputDir, { recursive: true });
       }
 
+      this.logger?.debug(`写入文件: ${finalOutputPath}, 内容长度: ${outputCss.length} 字符`);
+      
       fs.writeFileSync(finalOutputPath, outputCss);
+      
+      this.logger?.debug(`文件写入完成`);
+      
+      const fileExists = fs.existsSync(finalOutputPath);
+      const stats = fs.statSync(finalOutputPath);
+      const fileContent = fs.readFileSync(finalOutputPath, 'utf-8');
+      
+      this.logger?.debug(`文件存在: ${fileExists}, 大小: ${stats.size} 字节, 读取长度: ${fileContent.length} 字符`);
 
       this.logger?.info(`已成功编译 ${path.basename(filePath)} 到 ${finalOutputPath}`);
       return finalOutputPath;

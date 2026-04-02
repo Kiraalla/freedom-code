@@ -4,7 +4,7 @@
   "description": "一个强大的 VS Code 扩展，提供多语言文件格式化、代码片段自动补全和模板文件快速创建功能",
   "icon": "./logo.jpg",
   "main": "./extension.js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "Kiraalla",
   "homepage": "https://github.com/Kiraalla/freedom-code",
   "bugs": {
@@ -34,7 +34,6 @@
     "onLanguage:html",
     "onLanguage:css",
     "onLanguage:scss",
-    "onLanguage:sass",
     "onLanguage:less",
     "onLanguage:javascript",
     "onLanguage:typescript"
@@ -161,11 +160,6 @@
         "title": "SCSS 格式化"
       },
       {
-        "when": "editorLangId == sass",
-        "command": "extension.formatsass",
-        "title": "Sass 格式化"
-      },
-      {
         "when": "editorLangId == less",
         "command": "extension.formatless",
         "title": "Less 格式化"
@@ -250,7 +244,7 @@
       "commandPalette": [
         {
           "command": "extension.formatUnified",
-          "when": "editorLangId == wxml || editorLangId == vue || editorLangId == wxss || editorLangId == scss || editorLangId == sass || editorLangId == less || editorLangId == css || editorLangId == html || editorLangId == javascript || editorLangId == typescript"
+          "when": "editorLangId == wxml || editorLangId == vue || editorLangId == wxss || editorLangId == scss || editorLangId == less || editorLangId == css || editorLangId == html || editorLangId == javascript || editorLangId == typescript"
         }
       ]
     },
@@ -280,11 +274,6 @@
             "vue-postcss",
             "css"
           ],
-          "source.sass": [
-            "sass",
-            "css"
-          ],
-          "source.stylus": "stylus",
           "source.js": [
             "javascript"
           ],
@@ -348,7 +337,7 @@
         "command": "editor.action.formatDocument",
         "key": "shift+alt+f",
         "mac": "shift+alt+f",
-        "when": "editorTextFocus && !editorReadonly && (editorLangId == wxml || editorLangId == vue || editorLangId == wxss || editorLangId == scss || editorLangId == sass || editorLangId == less || editorLangId == css || editorLangId == html || editorLangId == javascript || editorLangId == typescript)"
+        "when": "editorTextFocus && !editorReadonly && (editorLangId == wxml || editorLangId == vue || editorLangId == wxss || editorLangId == scss || editorLangId == less || editorLangId == css || editorLangId == html || editorLangId == javascript || editorLangId == typescript)"
       }
     ],
     "configuration": {
@@ -363,7 +352,7 @@
         "freedomCode.prettierOptions": {
           "type": "object",
           "description": "📝 Prettier 统一配置（适用于所有支持的文件类型）",
-          "markdownDescription": "**统一格式化配置**\n\n适用于所有文件类型的基础配置。\n\n> 💡 **提示**: 点击「在 settings.json 中编辑」可查看详细配置示例\n\n> 📝 **单独配置不同文件类型**:\n> 使用 `overrides` 配置不同文件类型的格式化规则:\n> ```json\n> {\n>   \"overrides\": [\n>     {\n>       \"files\": [\"*.scss\", \"*.sass\"],\n>       \"options\": { \"tabWidth\": 4, \"singleQuote\": true }\n>     },\n>     {\n>       \"files\": [\"*.wxml\", \"*.wxss\"],\n>       \"options\": { \"tabWidth\": 2, \"printWidth\": 120 }\n>     }\n>   ]\n> }\n> ```",
+          "markdownDescription": "**统一格式化配置**\n\n适用于所有文件类型的基础配置。\n\n> 💡 **提示**: 点击「在 settings.json 中编辑」可查看详细配置示例\n\n> 📝 **单独配置不同文件类型**:\n> 使用 `overrides` 配置不同文件类型的格式化规则:\n> ```json\n> {\n>   \"overrides\": [\n>     {\n>       \"files\": [\"*.scss\"],\n>       \"options\": { \"tabWidth\": 4, \"singleQuote\": true }\n>     },\n>     {\n>       \"files\": [\"*.wxml\", \"*.wxss\"],\n>       \"options\": { \"tabWidth\": 2, \"printWidth\": 120 }\n>     }\n>   ]\n> }\n> ```",
           "default": {
             "printWidth": 80,
             "tabWidth": 2,
@@ -398,7 +387,7 @@
         "freedomCode.scss-compact-autoCompile": {
           "type": "boolean",
           "default": true,
-          "description": "💾 保存 SCSS/SASS 文件时自动编译",
+          "description": "💾 保存 SCSS 文件时自动编译",
           "group": "scss-compile"
         },
         "freedomCode.scssPreserveComments": {
@@ -538,18 +527,6 @@
       },
       {
         "language": "less",
-        "path": "./snippets/basic/css.json"
-      },
-      {
-        "language": "sass",
-        "path": "./snippets/basic/css.json"
-      },
-      {
-        "language": "stylus",
-        "path": "./snippets/basic/css.json"
-      },
-      {
-        "language": "postcss",
         "path": "./snippets/basic/css.json"
       },
       {

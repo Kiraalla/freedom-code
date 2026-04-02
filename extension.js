@@ -359,18 +359,18 @@ function activate(context) {
     try {
       const cfg = vscode.workspace.getConfiguration('freedomCode');
       const doc = event.document;
+      const languageId = doc.languageId;
 
-      if ((doc.languageId === 'vue' && cfg.get('vue-format-save-code')) ||
-        (doc.languageId === 'wxml' && cfg.get('wxml-format-save-code')) ||
-        (doc.languageId === 'wxss' && cfg.get('wxss-format-save-code')) ||
-        (doc.languageId === 'scss' && cfg.get('scss-format-save-code')) ||
-        (doc.languageId === 'sass' && cfg.get('sass-format-save-code')) ||
-        (doc.languageId === 'less' && cfg.get('less-format-save-code')) ||
-        (doc.languageId === 'css' && cfg.get('css-format-save-code')) ||
-        (doc.languageId === 'html' && cfg.get('html-format-save-code')) ||
-        (doc.languageId === 'javascript' && cfg.get('javascript-format-save-code')) ||
-        (doc.languageId === 'typescript' && cfg.get('typescript-format-save-code'))) {
-        logger.debug(`触发保存时格式化: ${doc.languageId}`);
+      // 格式化逻辑：检查是否启用了 formatOnSave，并且语言在支持列表中
+      const supportedLanguages = ['vue', 'wxml', 'wxss', 'scss', 'sass', 'less', 'css', 'html', 'javascript', 'typescript'];
+      const formatOnSaveEnabled = cfg.get('formatOnSave', false);
+      const isSupportedLanguage = supportedLanguages.includes(languageId);
+      const shouldFormat = formatOnSaveEnabled && isSupportedLanguage;
+
+      logger.debug(`格式化检查: ${languageId}, formatOnSave=${formatOnSaveEnabled}, supported=${isSupportedLanguage}, shouldFormat=${shouldFormat}`);
+
+      if (shouldFormat) {
+        logger.debug(`触发保存时格式化: ${languageId}`);
         event.waitUntil(vscode.commands.executeCommand('editor.action.formatDocument'));
       }
     }
@@ -379,14 +379,24 @@ function activate(context) {
     }
   }));
 
-  // 保存时自动编译 SCSS/SASS（根据配置）
-  context.subscriptions.push(vscode.workspace.onWillSaveTextDocument(event => {
+  // 保存后自动编译 SCSS/SASS（根据配置）
+  context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(event => {
     try {
+      // 如果事件没有文档对象，尝试从活动编辑器获取
+      const doc = event.document || vscode.window.activeTextEditor?.document;
+      
+      if (!doc) {
+        logger.debug('没有可用的文档对象，跳过编译');
+        return;
+      }
+      
       const cfg = vscode.workspace.getConfiguration('freedomCode');
-      const doc = event.document;
+      const languageId = doc.languageId;
+      logger.debug(`保存后事件触发: ${languageId}`);
 
-      if ((doc.languageId === 'scss' || doc.languageId === 'sass') && cfg.get('scss-compact-autoCompile')) {
-        logger.debug(`触发保存时编译: ${doc.languageId}`);
+      // 编译逻辑（仅针对 SCSS/SASS）
+      if ((languageId === 'scss' || languageId === 'sass') && cfg.get('scss-compact-autoCompile')) {
+        logger.debug(`触发保存后编译: ${languageId}`);
         const compiler = new SCSSCompiler();
         compiler.setLogger(logger);
         const workspaceFolder = vscode.workspace.getWorkspaceFolder(doc.uri);
@@ -404,7 +414,7 @@ function activate(context) {
       }
     }
     catch (e) {
-      logger.error('保存时编译错误', e);
+      logger.error('保存后编译错误', e);
     }
   }));
 

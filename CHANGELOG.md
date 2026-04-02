@@ -4,6 +4,21 @@ All notable changes to the "freedom-helper" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.0.2] - 2026-04-02
+
+### 🐛 修复问题
+- **修复保存时自动格式化不工作的问题**
+  - 问题：使用了不存在的配置项（如 `scss-format-save-code`）
+  - 修复：改用统一的 `freedomCode.formatOnSave` 配置开关
+
+- **修复 SCSS 保存后自动编译不触发的问题**
+  - 问题：`onWillSaveTextDocument` 中的异步编译与保存操作冲突
+  - 修复：将编译逻辑移到 `onDidSaveTextDocument` 事件中，在保存完成后执行
+
+- **修复文档对象获取失败的问题**
+  - 问题：`onDidSaveTextDocument` 的 `event.document` 有时为 undefined
+  - 修复：添加备选方案，从 `vscode.window.activeTextEditor` 获取文档
+
 ## [0.0.1] - 2026-04-01
 
 ### ✨ 新版本（新版添加了我另一个扩展scss-compact的功能）
