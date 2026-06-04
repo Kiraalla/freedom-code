@@ -76,22 +76,21 @@ class SCSSCompiler {
         case 'relative':
           if (outputPath) {
             let targetOutputPath;
+            // 使用传入的工作区路径,如果没有则使用文件所在目录
+            const wsPath = workspacePath || path.dirname(filePath);
+            
             if (path.isAbsolute(outputPath)) {
               targetOutputPath = outputPath;
             } else {
               if (outputPath.startsWith('/')) {
                 outputPath = outputPath.substring(1);
               }
-              // 使用传入的工作区路径,如果没有则使用文件所在目录
-              const wsPath = workspacePath || path.dirname(filePath);
               targetOutputPath = path.join(wsPath, outputPath);
               if (!fs.existsSync(targetOutputPath)) {
                 fs.mkdirSync(targetOutputPath, { recursive: true });
               }
             }
 
-            // 使用传入的工作区路径,如果没有则使用文件所在目录
-            const wsPath = workspacePath || path.dirname(filePath);
             const relativePath = path.relative(wsPath, path.dirname(filePath));
             const newOutputDir = path.join(targetOutputPath, relativePath);
             if (!fs.existsSync(newOutputDir)) {
@@ -120,13 +119,6 @@ class SCSSCompiler {
       fs.writeFileSync(finalOutputPath, outputCss);
       
       this.logger?.debug(`文件写入完成`);
-      
-      const fileExists = fs.existsSync(finalOutputPath);
-      const stats = fs.statSync(finalOutputPath);
-      const fileContent = fs.readFileSync(finalOutputPath, 'utf-8');
-      
-      this.logger?.debug(`文件存在: ${fileExists}, 大小: ${stats.size} 字节, 读取长度: ${fileContent.length} 字符`);
-
       this.logger?.info(`已成功编译 ${path.basename(filePath)} 到 ${finalOutputPath}`);
       return finalOutputPath;
     } catch (error) {

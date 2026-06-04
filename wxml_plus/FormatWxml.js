@@ -5,7 +5,7 @@ const vscode_1 = require("vscode");
 const format_core_1 = require('./format_core');
 
 /**
- * WXML 格式化类
+ * WXML 格式化类（保留以保持向后兼容
  */
 class FormatWxml {
   /**
@@ -13,7 +13,7 @@ class FormatWxml {
    * @returns {Promise} 格式化完成的 Promise
    */
   init() {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       this.editor = vscode_1.window.activeTextEditor;
       if (!this.editor) {
         vscode_1.window.showErrorMessage('没有活动的编辑器');
@@ -26,8 +26,8 @@ class FormatWxml {
           const doc = this.editor.document;
           const text = doc.getText();
           
-          // 直接使用统一的格式化
-          const formattedText = format_core_1.unifiedFormat(text, 'wxml');
+          // 使用统一的格式化器
+          const formattedText = await format_core_1.unifiedFormat(text, 'wxml');
           this.lineNumber = doc.lineCount;
 
           this.writeToFile(formattedText, resolve, reject);
@@ -45,11 +45,11 @@ class FormatWxml {
   /**
    * 使用统一格式化器格式化文本
    * @param {string} text - 要格式化的文本
-   * @returns {string} 格式化后的文本
+   * @returns {Promise<string>} 格式化后的文本
    */
-  beauty(text) {
+  async beauty(text) {
     try {
-      const result = format_core_1.unifiedFormat(text, 'wxml');
+      const result = await format_core_1.unifiedFormat(text, 'wxml');
       return result;
     } catch (error) {
       vscode_1.window.showErrorMessage(`WXML 格式化错误: ${error.message}`);
@@ -72,7 +72,6 @@ class FormatWxml {
       editBuilder.replace(range, str);
     }).then(success => {
       if (success) {
-        vscode_1.window.showInformationMessage('WXML 格式化完成');
         resolve();
       } else {
         vscode_1.window.showErrorMessage('WXML 格式化失败');

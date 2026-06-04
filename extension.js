@@ -139,6 +139,7 @@ function setupAutoQuote() {
 class FreedomDocumentFormattingEditProvider {
   async provideDocumentFormattingEdits(document) {
     const languageId = document.languageId;
+    const filePath = document.uri.fsPath;
 
     // 支持的文件类型
     const supportedLanguages = ['wxml', 'vue', 'wxss', 'scss', 'sass', 'less', 'css', 'html', 'javascript', 'typescript'];
@@ -150,27 +151,27 @@ class FreedomDocumentFormattingEditProvider {
       const text = document.getText();
       let formattedText;
 
-      // 根据文件类型调用对应的格式化函数
+      // 根据文件类型调用对应的格式化函数，并传递文件路径
       if (languageId === 'vue') {
-        formattedText = await format_core.unifiedFormat(text, 'vue');
+        formattedText = await format_core.unifiedFormat(text, 'vue', filePath);
       } else if (languageId === 'wxml') {
-        formattedText = await format_core.unifiedFormat(text, 'wxml');
+        formattedText = await format_core.unifiedFormat(text, 'wxml', filePath);
       } else if (languageId === 'wxss') {
-        formattedText = await format_core.unifiedFormat(text, 'wxss');
+        formattedText = await format_core.unifiedFormat(text, 'wxss', filePath);
       } else if (languageId === 'scss') {
-        formattedText = await format_core.unifiedFormat(text, 'scss');
+        formattedText = await format_core.unifiedFormat(text, 'scss', filePath);
       } else if (languageId === 'sass') {
-        formattedText = await format_core.unifiedFormat(text, 'sass');
+        formattedText = await format_core.unifiedFormat(text, 'sass', filePath);
       } else if (languageId === 'less') {
-        formattedText = await format_core.unifiedFormat(text, 'less');
+        formattedText = await format_core.unifiedFormat(text, 'less', filePath);
       } else if (languageId === 'css') {
-        formattedText = await format_core.unifiedFormat(text, 'css');
+        formattedText = await format_core.unifiedFormat(text, 'css', filePath);
       } else if (languageId === 'html') {
-        formattedText = await format_core.unifiedFormat(text, 'html');
+        formattedText = await format_core.unifiedFormat(text, 'html', filePath);
       } else if (languageId === 'javascript') {
-        formattedText = await format_core.unifiedFormat(text, 'javascript');
+        formattedText = await format_core.unifiedFormat(text, 'javascript', filePath);
       } else if (languageId === 'typescript') {
-        formattedText = await format_core.unifiedFormat(text, 'typescript');
+        formattedText = await format_core.unifiedFormat(text, 'typescript', filePath);
       }
 
       // 返回格式化后的文本编辑
@@ -188,6 +189,7 @@ class FreedomDocumentFormattingEditProvider {
 
   async provideDocumentRangeFormattingEdits(document, range) {
     const languageId = document.languageId;
+    const filePath = document.uri.fsPath;
 
     // 支持的文件类型
     const supportedLanguages = ['wxml', 'vue', 'wxss', 'scss', 'sass', 'less', 'css', 'html', 'javascript', 'typescript'];
@@ -199,27 +201,27 @@ class FreedomDocumentFormattingEditProvider {
       const text = document.getText(range);
       let formattedText;
 
-      // 根据文件类型调用对应的格式化函数
+      // 根据文件类型调用对应的格式化函数，并传递文件路径
       if (languageId === 'vue') {
-        formattedText = await format_core.unifiedFormat(text, 'vue');
+        formattedText = await format_core.unifiedFormat(text, 'vue', filePath);
       } else if (languageId === 'wxml') {
-        formattedText = await format_core.unifiedFormat(text, 'wxml');
+        formattedText = await format_core.unifiedFormat(text, 'wxml', filePath);
       } else if (languageId === 'wxss') {
-        formattedText = await format_core.unifiedFormat(text, 'wxss');
+        formattedText = await format_core.unifiedFormat(text, 'wxss', filePath);
       } else if (languageId === 'scss') {
-        formattedText = await format_core.unifiedFormat(text, 'scss');
+        formattedText = await format_core.unifiedFormat(text, 'scss', filePath);
       } else if (languageId === 'sass') {
-        formattedText = await format_core.unifiedFormat(text, 'sass');
+        formattedText = await format_core.unifiedFormat(text, 'sass', filePath);
       } else if (languageId === 'less') {
-        formattedText = await format_core.unifiedFormat(text, 'less');
+        formattedText = await format_core.unifiedFormat(text, 'less', filePath);
       } else if (languageId === 'css') {
-        formattedText = await format_core.unifiedFormat(text, 'css');
+        formattedText = await format_core.unifiedFormat(text, 'css', filePath);
       } else if (languageId === 'html') {
-        formattedText = await format_core.unifiedFormat(text, 'html');
+        formattedText = await format_core.unifiedFormat(text, 'html', filePath);
       } else if (languageId === 'javascript') {
-        formattedText = await format_core.unifiedFormat(text, 'javascript');
+        formattedText = await format_core.unifiedFormat(text, 'javascript', filePath);
       } else if (languageId === 'typescript') {
-        formattedText = await format_core.unifiedFormat(text, 'typescript');
+        formattedText = await format_core.unifiedFormat(text, 'typescript', filePath);
       }
 
       return [vscode.TextEdit.replace(range, formattedText)];
@@ -250,8 +252,9 @@ function activate(context) {
   // 注册多语言属性自动补全
   setupAutoQuote();
 
-  // 注册文档格式化器 - 这是解决格式化问题的关键
+  // 注册文档格式化器 - 保存到全局变量以便在事件处理器中使用
   const formattingProvider = new FreedomDocumentFormattingEditProvider();
+  global.formattingProvider = formattingProvider;
 
   // 批量注册格式化器
   const supportedLanguages = ['wxml', 'vue', 'wxss', 'scss', 'less', 'css', 'html', 'javascript', 'typescript'];
@@ -274,48 +277,41 @@ function activate(context) {
     );
   });
 
-  // 监听配置变化，更新调试模式
+  // 监听配置变化，更新调试模式并清除缓存
   context.subscriptions.push(
     vscode.workspace.onDidChangeConfiguration(e => {
-      if (e.affectsConfiguration('freedomCode.debugMode')) {
+      // 检查是否有任何 freedomCode 配置变化
+      if (e.affectsConfiguration('freedomCode')) {
+        // 更新调试模式
         const config = vscode.workspace.getConfiguration('freedomCode');
         const debugMode = config.get('debugMode', false);
         logger.setDebugMode(debugMode);
-        logger.info(`调试模式已${debugMode ? '启用' : '禁用'}`);
-      }
-      
-      // 清除 Prettier 配置缓存
-      if (e.affectsConfiguration('freedomCode.prettierOptions') || 
-          e.affectsConfiguration('freedomCode.wxmlPrettierOptions') ||
-          e.affectsConfiguration('freedomCode.vuePrettierOptions') ||
-          e.affectsConfiguration('freedomCode.wxssPrettierOptions') ||
-          e.affectsConfiguration('freedomCode.scssPrettierOptions') ||
-          e.affectsConfiguration('freedomCode.sassPrettierOptions') ||
-          e.affectsConfiguration('freedomCode.lessPrettierOptions') ||
-          e.affectsConfiguration('freedomCode.cssPrettierOptions') ||
-          e.affectsConfiguration('freedomCode.htmlPrettierOptions') ||
-          e.affectsConfiguration('freedomCode.javascriptPrettierOptions') ||
-          e.affectsConfiguration('freedomCode.typescriptPrettierOptions')) {
+        
+        // 清除所有配置缓存
         format_core.ConfigManager.clearCache();
-        logger.debug('Prettier 配置缓存已清除');
+        logger.debug('freedomCode 配置已变化，缓存已清除');
+        
+        if (e.affectsConfiguration('freedomCode.debugMode')) {
+          logger.info(`调试模式已${debugMode ? '启用' : '禁用'}`);
+        }
       }
     })
   );
 
-  // 注册命令：切换格式化开关
-  registerCommand(context, 'extension.compileOff', () => {
-    let config = vscode.workspace.getConfiguration("freedomCode");
-    config.update("vue-format-save-code", true);
-    config.update("wxml-format-save-code", true);
-    logger.info('格式化开关已开启');
-  });
+  // 废弃的命令（保留向后兼容性）
+    registerCommand(context, 'extension.compileOff', () => {
+      vscode.window.showInformationMessage('该命令已废弃，请使用 settings 配置 formatOnSave');
+      let config = vscode.workspace.getConfiguration("freedomCode");
+      config.update("formatOnSave", false);
+      logger.info('formatOnSave 已关闭');
+    });
 
-  registerCommand(context, 'extension.compileOn', () => {
-    let config = vscode.workspace.getConfiguration("freedomCode");
-    config.update("vue-format-save-code", false);
-    config.update("wxml-format-save-code", false);
-    logger.info('格式化开关已关闭');
-  });
+    registerCommand(context, 'extension.compileOn', () => {
+      vscode.window.showInformationMessage('该命令已废弃，请使用 settings 配置 formatOnSave');
+      let config = vscode.workspace.getConfiguration("freedomCode");
+      config.update("formatOnSave", true);
+      logger.info('formatOnSave 已开启');
+    });
 
   // 编译 SCSS/SASS 命令
   registerCommand(context, 'extension.compileScss', async () => {
@@ -371,7 +367,23 @@ function activate(context) {
 
       if (shouldFormat) {
         logger.debug(`触发保存时格式化: ${languageId}`);
-        event.waitUntil(vscode.commands.executeCommand('editor.action.formatDocument'));
+        // 使用扩展自己的格式化器
+        const provider = global.formattingProvider;
+        if (provider) {
+          const promise = provider.provideDocumentFormattingEdits(doc).then(edits => {
+            if (edits && edits.length > 0) {
+              logger.debug(`格式化完成，生成 ${edits.length} 个编辑`);
+              return edits;
+            }
+            return [];
+          }).catch(err => {
+            logger.error('格式化出错', err);
+            return [];
+          });
+          event.waitUntil(promise);
+        } else {
+          logger.error('格式化器未找到');
+        }
       }
     }
     catch (e) {

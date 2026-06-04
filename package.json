@@ -4,7 +4,7 @@
   "description": "一个强大的 VS Code 扩展，提供多语言文件格式化、代码片段自动补全和模板文件快速创建功能",
   "icon": "./logo.jpg",
   "main": "./extension.js",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "publisher": "Kiraalla",
   "homepage": "https://github.com/Kiraalla/freedom-code",
   "bugs": {
