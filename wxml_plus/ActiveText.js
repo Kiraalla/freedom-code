@@ -68,13 +68,14 @@ class ActiveText {
     //更新
     updateDecorationCache() {
         let cache = this.decorationCache;
-        let oldKeys = Object.keys(cache);
         let existKeys = vscode_1.workspace.textDocuments.map(doc => doc.fileName);
-        oldKeys.forEach(k => {
-            k = k.split('-cnyballk-')[0];
-            if (existKeys.indexOf(k) < 0 && cache[k]) {
-                cache[k].style.dispose();
-                delete cache[k];
+        // cache 的 key 是 "文件名-cnyballk-后缀"，必须用完整 key 删除；
+        // 先把 key 截成文件名再查 cache[k] 永远查不到，decoration 就泄了（B11）。
+        Object.keys(cache).forEach((key) => {
+            const fileName = key.split('-cnyballk-')[0];
+            if (existKeys.indexOf(fileName) < 0) {
+                cache[key].style.dispose();
+                delete cache[key];
             }
         });
     }

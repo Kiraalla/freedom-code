@@ -2,6 +2,33 @@
 const prettier = require("prettier");
 const vscode = require("vscode");
 const path = require("path");
+const {
+  findMarkupRanges,
+  protectVerbatimBlocks,
+  restoreVerbatimBlocks,
+  applyMustacheSpacing,
+  protectComments,
+  restoreComments,
+  compressTextTags,
+} = require("./pipeline");
+const { applyEditorFormattingOptions } = require("./editor-contract");
+const { formatCompact } = require("../util/css_formatter");
+const pugPlugin = require("@prettier/plugin-pug");
+
+/** WXML 中必须整块原样保留的标签：Prettier 会把 <wxs> 里的 JS 当 HTML 文本重排 */
+const WXML_VERBATIM_BLOCKS = ["template", "wxs"];
+
+/**
+ * 去掉 overrides：它由 ConfigManager 手动匹配，直接交给 Prettier 会报
+ * "Invalid host defined options"。
+ * @param {object} options
+ * @returns {object} 新对象
+ */
+function withoutOverrides(options) {
+  const rest = { ...options };
+  delete rest.overrides;
+  return rest;
+}
 
 /**
  * @typedef {Object} CommentMapping
@@ -15,20 +42,23 @@ const path = require("path");
 class ConfigManager {
   constructor() {
     ConfigManager.cachedConfig = null;
-    ConfigManager.cacheTimestamp = 0;
   }
-  
+
   /**
-   * 获取指定文件类型的合并后的 Prettier 配置
+   * 获取指定文件类型 + 文件的合并 Prettier 配置。
+   *
+   * 缓存键必须包含文件路径：`overrides` 是按文件名匹配的，只按 fileType 缓存会让
+   * 两个带不同 overrides 的同类型文件互相拿到对方的配置（曾实际发生过）。
+   * 失效交给 extension.js 的“配置变更 → clearCache”，不再用 TTL 兜底。
    * @param {string} fileType - 文件类型 'vue' 或 'wxml'
    * @param {string} filePath - 文件路径（用于 overrides 匹配）
    * @returns {Promise<object>} 合并后的配置对象
    */
   static async getMergedPrettierConfig(fileType, filePath = null) {
-    const now = Date.now();
-    // 缓存有效期 10 秒（减少缓存失效问题）
-    if (this.cachedConfig && this.cachedConfig[fileType] && now - this.cacheTimestamp < 10 * 1000) {
-      return this.cachedConfig[fileType];
+    const cacheKey = `${fileType}::${filePath || ''}`;
+
+    if (this.cachedConfig && cacheKey in this.cachedConfig) {
+      return this.cachedConfig[cacheKey];
     }
 
     const config = vscode.workspace.getConfiguration('freedomCode');
@@ -46,26 +76,17 @@ class ConfigManager {
       parser: 'vue'
     };
 
-    // 如果有文件路径和 overrides 配置，手动处理 overrides
-    if (filePath && mergedConfig.overrides) {
-      const resolvedConfig = ConfigManager.applyOverrides(filePath, mergedConfig);
-      // 缓存配置
-      if (!this.cachedConfig) {
-        this.cachedConfig = {};
-      }
-      this.cachedConfig[fileType] = resolvedConfig;
-      this.cacheTimestamp = now;
-      return resolvedConfig;
-    }
+    // overrides 由自己按文件名匹配（Prettier 直接吃 overrides 会报错）
+    const resolvedConfig = filePath && mergedConfig.overrides
+      ? ConfigManager.applyOverrides(filePath, mergedConfig)
+      : mergedConfig;
 
-    // 缓存配置
     if (!this.cachedConfig) {
       this.cachedConfig = {};
     }
-    this.cachedConfig[fileType] = mergedConfig;
-    this.cacheTimestamp = now;
+    this.cachedConfig[cacheKey] = resolvedConfig;
 
-    return mergedConfig;
+    return resolvedConfig;
   }
   
   /**
@@ -123,26 +144,6 @@ class ConfigManager {
   }
 
   /**
-   * 解析 Prettier 配置，支持 overrides
-   * @param {string} filePath - 文件路径
-   * @param {object} options - Prettier 选项
-   * @returns {Promise<object>} 解析后的配置
-   */
-  static async resolveConfig(filePath, options) {
-    try {
-      // 使用 prettier.resolveConfig 来正确处理 overrides
-      const resolved = await prettier.resolveConfig(filePath, {
-        config: options
-      });
-      return { ...options, ...resolved };
-    } catch (error) {
-      // 如果 resolveConfig 失败，返回原始选项
-      console.warn(`[WARN] resolveConfig failed: ${error.message}`);
-      return options;
-    }
-  }
-
-  /**
    * 获取 mustache 空格配置
    * @returns {Promise<string>} 空格模式：'space' | 'preserve' | 'nospace'
    */
@@ -153,69 +154,64 @@ class ConfigManager {
   }
 
   /**
+   * 用户在 `prettierOptions`（含 `overrides`、兼容的 `${fileType}PrettierOptions`）里
+   * 是否**显式**写了缩进。没写时才允许编辑器的 `FormattingOptions` 接管。
+   *
+   * 不能用 `get()` 判断：`prettierOptions` 在 package.json 里有默认值，`get()` 永远有值。
+   * @param {string} fileType
+   * @param {string|null} filePath
+   * @returns {{ tabWidth: boolean, useTabs: boolean }}
+   */
+  static getExplicitIndentSetting(fileType, filePath = null) {
+    // 注意：readSetting 使用的是根配置 + 全键，这里 inspect 也必须走根配置
+    const root = vscode.workspace.getConfiguration();
+    const userOptions = ConfigManager.explicitObject(root, 'freedomCode.prettierOptions');
+
+    const result = {
+      tabWidth: Object.prototype.hasOwnProperty.call(userOptions, 'tabWidth'),
+      useTabs: Object.prototype.hasOwnProperty.call(userOptions, 'useTabs'),
+    };
+
+    const fileName = filePath ? path.basename(filePath) : '';
+    for (const override of userOptions.overrides || []) {
+      if (!override || !ConfigManager.matchesPattern(fileName, override.files)) continue;
+      const options = override.options || {};
+      if (typeof options.tabWidth === 'number') result.tabWidth = true;
+      if (typeof options.useTabs === 'boolean') result.useTabs = true;
+    }
+
+    const legacy = ConfigManager.explicitObject(root, `freedomCode.${fileType}PrettierOptions`);
+    if (Object.prototype.hasOwnProperty.call(legacy, 'tabWidth')) result.tabWidth = true;
+    if (Object.prototype.hasOwnProperty.call(legacy, 'useTabs')) result.useTabs = true;
+
+    return result;
+  }
+
+  /**
+   * 取用户显式设置的对象值（工作区文件夹 > 工作区 > 用户），忽略 package.json 默认值。
+   * @param {vscode.WorkspaceConfiguration} root
+   * @param {string} key 含 scope 的全键
+   * @returns {object}
+   */
+  static explicitObject(root, key) {
+    const inspected = root.inspect(key);
+    if (!inspected) return {};
+
+    return {
+      ...(inspected.globalValue || {}),
+      ...(inspected.workspaceValue || {}),
+      ...(inspected.workspaceFolderValue || {}),
+    };
+  }
+
+  /**
    * 清除缓存
    */
   static clearCache() {
     this.cachedConfig = null;
-    this.cacheTimestamp = 0;
   }
 }
 
-/**
- * 保护注释内容：将注释替换为占位符
- * @param {string} code - 原始代码
- * @returns {object} { code: 处理后的代码, comments: 注释映射表 }
- */
-function protectComments(code) {
-  const comments = [];
-  let index = 0;
-  
-  // 使用 htmlparser2 替代正则表达式处理注释
-  const htmlparser2 = require('htmlparser2');
-  
-  // 先收集所有注释
-  const parser = new htmlparser2.Parser({
-    oncomment: (data) => {
-      const original = `<!--${data}-->`;
-      const placeholder = `<!--__COMMENT_PLACEHOLDER_${index}__-->`;
-      comments.push({ placeholder, original });
-      index++;
-    }
-  }, { decodeEntities: true });
-  
-  parser.write(code);
-  parser.end();
-  
-  // 替换注释为占位符
-  let protectedCode = code;
-  comments.forEach(({ placeholder, original }) => {
-    protectedCode = protectedCode.replace(original, placeholder);
-  });
-  
-  return { code: protectedCode, comments };
-}
-
-/**
- * 恢复注释内容：将占位符替换回原始注释
- * @param {string} code - 处理后的代码
- * @param {Array} comments - 注释映射表
- * @returns {string} 恢复注释后的代码
- */
-function restoreComments(code, comments) {
-  let restoredCode = code;
-  
-  comments.forEach(({ placeholder, original }) => {
-    restoredCode = restoredCode.replace(placeholder, original);
-  });
-  
-  return restoredCode;
-}
-
-/**
- * WXML 预处理：将 WXML 包装在 Vue 模板中
- * @param {string} wxmlCode - 原始 WXML 代码
- * @returns {string} 包装后的 Vue 模板代码
- */
 function preprocessWxml(wxmlCode) {
   // 将 WXML 包装在 Vue 模板中，让 Prettier 将其视为 Vue 自定义组件
   const wrappedCode = `<template>\n${wxmlCode}\n</template>`;
@@ -262,84 +258,17 @@ function postprocessWxml(formattedVueCode) {
 }
 
 /**
- * 保护 text 标签内容不被换行
- * @param {string} code - 原始代码
- * @returns {object} { code: 处理后的代码, textTags: text 标签列表 }
- */
-function protectTextTags(code) {
-  const textTags = [];
-  let index = 0;
-  // 匹配 text 标签，包括内部内容
-  const textTagRegex = /<text(\s[^>]*)?>([\s\S]*?)<\/text>/gi;
-  let processedCode = code;
-  
-  let match;
-  while ((match = textTagRegex.exec(code)) !== null) {
-    const originalTag = match[0];
-    const placeholder = `__TEXT_TAG_${index}__`;
-    textTags.push({ placeholder, original: originalTag });
-    index++;
-  }
-  
-  // 倒序替换，避免索引变化影响
-  for (let i = textTags.length - 1; i >= 0; i--) {
-    const { placeholder, original } = textTags[i];
-    processedCode = processedCode.replace(original, placeholder);
-  }
-  
-  return { code: processedCode, textTags };
-}
-
-/**
- * 恢复 text 标签内容
- * @param {string} code - 处理后的代码
- * @param {Array} textTags - text 标签列表
- * @returns {string} 恢复后的代码
- */
-function restoreTextTags(code, textTags) {
-  let restoredCode = code;
-  textTags.forEach(({ placeholder, original }) => {
-    restoredCode = restoredCode.replace(placeholder, original);
-  });
-  return restoredCode;
-}
-
-/**
- * 压缩 text 标签内容（仅当内部有换行时才压缩）
- * @param {string} code - 原始代码
- * @returns {string} 处理后的代码
- */
-function compressTextTags(code) {
-  // 匹配 text 标签
-  return code.replace(/<text(\s[^>]*)?>([\s\S]*?)<\/text>/gi, (match, attrs, content) => {
-    // 检查内部内容是否包含换行
-    const hasNewline = /[\r\n]/.test(content);
-    
-    // 只有当内部有换行时才压缩，否则保持原样
-    if (hasNewline) {
-      // 压缩内部内容，将换行和多余空格替换为单个空格
-      const compressedContent = content.replace(/\s+/g, ' ').trim();
-      if (attrs) {
-        return `<text${attrs}>${compressedContent}</text>`;
-      }
-      return `<text>${compressedContent}</text>`;
-    }
-    
-    // 没有换行，保持原样
-    return match;
-  });
-}
-
-/**
  * 统一格式化函数
  * @param {string} code - 要格式化的代码
- * @param {string} fileType - 文件类型 'vue'、'wxml'、'wxss'、'scss'、'sass'、'less'、'css'、'html'、'javascript' 或 'typescript'
+ * @param {string} fileType - 文件类型 'vue'、'wxml'、'wxss'、'less'、'css'、'html'、'javascript' 或 'typescript'
+ *   （`sass` 缩进语法没有对应的 Prettier parser，会原样返回）
  * @param {string} filePath - 文件路径（用于 overrides 匹配）
+ * @param {{ tabSize?: number, insertSpaces?: boolean }} [editorOptions] - 编辑器传入的 FormattingOptions；仅在用户未显式配置缩进时生效
+ * @param {{ compactCss?: boolean }} [formatOptions] - css/wxss 是否用单行紧凑排版
  * @returns {Promise<string>} 格式化后的代码
  */
-async function unifiedFormat(code, fileType, filePath = null) {
+async function unifiedFormat(code, fileType, filePath = null, editorOptions = null, formatOptions = {}) {
   try {
-    console.log(`[DEBUG] 开始格式化文件类型: ${fileType}, 代码长度: ${code.length}`);
     // 大文件优化：如果文件大小超过 1MB，使用快速格式化模式
     if (code.length > 1024 * 1024) {
       return code;
@@ -353,36 +282,66 @@ async function unifiedFormat(code, fileType, filePath = null) {
       'css': { parser: 'css', ext: '.css' },
       'html': { parser: 'html', ext: '.html' },
       'javascript': { parser: 'babel', ext: '.js' },
-      'typescript': { parser: 'typescript', ext: '.ts' }
+      'typescript': { parser: 'typescript', ext: '.ts' },
+      // Pug 由 @prettier/plugin-pug 提供 parser（Prettier 内核不含 pug）
+      'pug': { parser: 'pug', ext: '.pug', plugins: [pugPlugin] }
     };
+
+    // Prettier 没有 sass（缩进语法）的 parser。返回原文、不报错，
+    // 让 VS Code 把格式化交给下一个提供器（如 Prettier 扩展）。
+    if (!parserMap[fileType] && fileType !== 'vue' && fileType !== 'wxml') {
+      return code;
+    }
 
     // 快速格式化非 Vue/WXML 文件
     if (parserMap[fileType]) {
       // 确定文件路径，用于 overrides 匹配
       const effectiveFilePath = filePath || `temp${parserMap[fileType].ext}`;
       const prettierOptions = await ConfigManager.getMergedPrettierConfig(fileType, effectiveFilePath);
+      // 优先级：用户显式配置 > 编辑器 options > 扩展默认值
+      const explicitIndent = ConfigManager.getExplicitIndentSetting(fileType, effectiveFilePath);
+      const editorAwareOptions = applyEditorFormattingOptions(prettierOptions, editorOptions, explicitIndent);
       
-      // 清理 Prettier 不支持的选项，避免 "Invalid host defined options" 错误
-      const { overrides, ...cleanOptions } = prettierOptions;
+      const cleanOptions = withoutOverrides(editorAwareOptions);
       
       const finalOptions = {
         ...cleanOptions,
         parser: parserMap[fileType].parser,
-        filepath: effectiveFilePath
+        filepath: effectiveFilePath,
+        ...(parserMap[fileType].plugins ? { plugins: parserMap[fileType].plugins } : {})
       };
-      return await prettier.format(code, finalOptions);
+
+      let output = await prettier.format(code, finalOptions);
+
+      // css / wxss 可选用单行紧凑排版（保留注释：格式化不能删用户内容）
+      if (formatOptions.compactCss && (fileType === 'css' || fileType === 'wxss')) {
+        const tabSize = typeof editorOptions?.tabSize === 'number' && editorOptions.tabSize > 0
+          ? editorOptions.tabSize
+          : 2;
+        output = formatCompact(output, {
+          preserveComments: true,
+          indentUnit: ' '.repeat(tabSize),
+        });
+      }
+
+      return output;
     }
     
     let codeToFormat = code;
     let isWxml = false;
     let savedComments = [];
+    let savedBlocks = [];
     let needCommentProtection = false;
     let prettierOptions = null;
 
     // WXML 预处理
     if (fileType === 'wxml') {
-      // 保护注释内容
-      const { code: protectedCode, comments } = protectComments(code);
+      // 模板块先整体保护：Prettier 会把 <wxs> 里的 JS 当 HTML 文本重排。
+      // 顺序很重要 —— 块保护必须在注释保护之前，否则块内的注释会被单独抽走。
+      const protectedBlocks = protectVerbatimBlocks(code, WXML_VERBATIM_BLOCKS);
+      savedBlocks = protectedBlocks.blocks;
+
+      const { code: protectedCode, comments } = protectComments(protectedBlocks.code);
       savedComments = comments;
       codeToFormat = preprocessWxml(protectedCode);
       isWxml = true;
@@ -398,14 +357,17 @@ async function unifiedFormat(code, fileType, filePath = null) {
     // 重新获取配置（带上文件路径，以便正确处理 overrides）
     const effectiveFilePath = filePath || (fileType === 'wxml' ? 'temp.wxml' : 'temp.vue');
     prettierOptions = await ConfigManager.getMergedPrettierConfig(fileType, effectiveFilePath);
+    // 优先级：用户显式配置 > 编辑器 options > 扩展默认值
+    const explicitIndent = ConfigManager.getExplicitIndentSetting(fileType, effectiveFilePath);
+    prettierOptions = applyEditorFormattingOptions(prettierOptions, editorOptions, explicitIndent);
 
-    // 清理 Prettier 不支持的选项，避免 "Invalid host defined options" 错误
-    const { overrides, ...cleanPrettierOptions } = prettierOptions;
+    const cleanPrettierOptions = withoutOverrides(prettierOptions);
 
-    // 强制覆盖关键配置，确保一致性
+    // 只强制 WXML 包裹方案必需的项：parser 必须是 vue；
+    // htmlWhitespaceSensitivity 必须 ignore，否则包裹后的空白处理会破坏 WXML。
+    // singleAttributePerLine / bracketSameLine 不再强制 —— 用户设什么就是什么
+    // （默认值已调到与之前强制值一致，见 package.json 的 prettierOptions）。
     const forcedOptions = {
-      singleAttributePerLine: false,
-      bracketSameLine: true,
       htmlWhitespaceSensitivity: 'ignore',
       parser: 'vue'
     };
@@ -423,21 +385,29 @@ async function unifiedFormat(code, fileType, filePath = null) {
     if (isWxml) {
       formatted = postprocessWxml(formatted);
     }
-    
+
+    // mustache 空格只作用于标记区域（B1）：Vue 仅 <template>，WXML 全文。
+    // 这一步必须在还原注释/模板块之前，否则 <script>、<style>、<wxs> 里的
+    // 字符串与正则字面量会被误改。WXML 没有单花括号语法，不跑单括号规则。
+    const mustacheSpacing = await ConfigManager.getMustacheSpacingConfig();
+    formatted = applyMustacheSpacing(formatted, {
+      spacing: mustacheSpacing,
+      ranges: findMarkupRanges(formatted, fileType),
+      singleBraces: fileType !== 'wxml',
+    });
+
     // 恢复注释内容（WXML 和 Vue 都需要）
     if (needCommentProtection) {
       formatted = restoreComments(formatted, savedComments);
     }
-    
+
     // 压缩内部有换行的 text 标签（仅 WXML）
     // 这样可以保证 Prettier 正常缩进，然后只处理有问题的 text 标签
     if (isWxml) {
       formatted = compressTextTags(formatted);
+      // 模板块最后还原：内容逐字符回到原文
+      formatted = restoreVerbatimBlocks(formatted, savedBlocks);
     }
-
-    // 应用 mustache 空格处理
-    const mustacheSpacing = await ConfigManager.getMustacheSpacingConfig();
-    formatted = formatMustacheSpacing(formatted, mustacheSpacing);
 
     return formatted;
   } catch (error) {
@@ -446,58 +416,7 @@ async function unifiedFormat(code, fileType, filePath = null) {
   }
 }
 
-/**
- * 处理 mustache 表达式的空格
- * @param {string} text - 原始文本
- * @param {string} spacing - 空格模式：'space' | 'preserve' | 'nospace'
- * @returns {string} 处理后的文本
- */
-function formatMustacheSpacing(text, spacing) {
-  if (spacing === 'preserve') {
-    return text;
-  }
-
-  // 处理双花括号 {{ }}
-  let processed = text.replace(/{{\s*([^{}]*?)\s*}}/g, (match, inner) => {
-    const trimmed = inner.trim();
-
-    if (spacing === 'nospace') {
-      return `{{${trimmed}}}`;
-    } else if (spacing === 'space') {
-      // 展开运算符 ... 不加空格
-      if (trimmed.startsWith('...')) {
-        return `{{${trimmed}}}`;
-      } else {
-        return `{{ ${trimmed} }}`;
-      }
-    }
-
-    return match;
-  });
-
-  // 处理单花括号 { }（用于 Vue 的 v-bind 简写）
-  processed = processed.replace(/\{\s*([^{}]*?)\s*\}/g, (match, inner) => {
-    const trimmed = inner.trim();
-
-    if (spacing === 'nospace') {
-      return `{${trimmed}}`;
-    } else if (spacing === 'space') {
-      // 展开运算符 ... 不加空格
-      if (trimmed.startsWith('...')) {
-        return `{${trimmed}}`;
-      } else {
-        return `{ ${trimmed} }`;
-      }
-    }
-
-    return match;
-  });
-
-  return processed;
-}
-
 module.exports = {
   unifiedFormat,
   ConfigManager,
-  formatMustacheSpacing
 };
