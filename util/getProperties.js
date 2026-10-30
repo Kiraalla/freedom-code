@@ -2,6 +2,16 @@ const recast = require('recast');
 const fs = require('fs');
 
 function getProperties(filePath) {
+  // 组件代码千奇百怪（键写法、现代语法、路径失效）：解析失败时静默退化为
+  // "无补全项"，不能让异常穿透到 CompletionItemProvider 打断用户输入。
+  try {
+    return collectProperties(filePath);
+  } catch (error) {
+    return [];
+  }
+}
+
+function collectProperties(filePath) {
   const code = fs.readFileSync(filePath, 'utf8');
   const ast = recast.parse(code);
   const events = [];
@@ -73,27 +83,28 @@ function findVariableDeclarator(ast, name) {
 }
 
 function findProperties(properties) {
-  let result;
+  if (!Array.isArray(properties)) {
+    return [];
+  }
 
   for (let i = 0, item; (item = properties[i++]); ) {
-    if (item.key.name === 'properties') {
-      let attributes = [];
-      item.value.properties.forEach((property) => {
-        const attribute = {
+    if (
+      item.key &&
+      item.key.name === 'properties' &&
+      item.value &&
+      Array.isArray(item.value.properties)
+    ) {
+      return item.value.properties
+        .filter((property) => property.key && property.key.name)
+        .map((property) => ({
           name: property.key.name, // 属性名
           documentation: recast.print(property).code, // 说明
           insertText: `${property.key.name}="{{$1}}"`,
-        };
-
-        attributes.push(attribute);
-      });
-
-      result = attributes;
-      break;
+        }));
     }
   }
 
-  return result;
+  return [];
 }
 
 module.exports = getProperties;

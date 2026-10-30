@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "小程序页面配置（page.json）",
+  "description": "页面级配置。已知键会给出补全与悬停；未知键不报错（小程序基础库持续新增能力）。",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "usingComponents": {
+      "type": "object",
+      "description": "页面使用的自定义组件：组件名 → 组件路径（以 / 开头为相对小程序根）",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "navigationBarTitleText": {
+      "type": "string",
+      "description": "导航栏标题文字内容"
+    },
+    "navigationBarBackgroundColor": {
+      "type": "string",
+      "description": "导航栏背景颜色，如 #000000"
+    },
+    "navigationBarTextStyle": {
+      "type": "string",
+      "enum": ["black", "white"],
+      "description": "导航栏标题颜色，仅支持 black / white"
+    },
+    "navigationStyle": {
+      "type": "string",
+      "enum": ["default", "custom"],
+      "description": "导航栏样式：default 默认样式，custom 自定义导航栏"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "description": "窗口背景色，如 #ffffff"
+    },
+    "backgroundTextStyle": {
+      "type": "string",
+      "enum": ["dark", "light"],
+      "description": "下拉 loading 的样式，仅支持 dark / light"
+    },
+    "backgroundColorTop": {
+      "type": "string",
+      "description": "顶部窗口背景色（iOS 支持）"
+    },
+    "backgroundColorBottom": {
+      "type": "string",
+      "description": "底部窗口背景色（iOS 支持）"
+    },
+    "enablePullDownRefresh": {
+      "type": "boolean",
+      "description": "是否开启当前页面的下拉刷新"
+    },
+    "onReachBottomDistance": {
+      "type": "number",
+      "description": "页面上拉触底事件触发时距页面底部距离，单位 px"
+    },
+    "disableScroll": {
+      "type": "boolean",
+      "description": "是否禁止页面滚动（设为 true 时页面整体不能上下滚动）"
+    },
+    "pageOrientation": {
+      "type": "string",
+      "enum": ["auto", "portrait", "landscape"],
+      "description": "屏幕旋转设置，支持 auto / portrait / landscape"
+    },
+    "restartStrategy": {
+      "type": "string",
+      "enum": ["homePage", "homePageAndLatestPage"],
+      "description": "重新启动策略"
+    },
+    "componentFramework": {
+      "type": "string",
+      "enum": ["exparser", "glass-easel"],
+      "description": "组件框架"
+    }
+  }
+}

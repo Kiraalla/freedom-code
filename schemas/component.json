@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "小程序组件配置（component.json）",
+  "description": "自定义组件级配置。已知键会给出补全与悬停；未知键不报错。",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "component": {
+      "type": "boolean",
+      "description": "声明这是自定义组件，必须为 true"
+    },
+    "usingComponents": {
+      "type": "object",
+      "description": "组件使用的自定义组件：组件名 → 组件路径",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "styleIsolation": {
+      "type": "string",
+      "enum": ["isolated", "apply-shared", "shared"],
+      "description": "组件样式隔离选项：isolated 隔离 / apply-shared 页面样式影响组件 / shared 双向影响"
+    },
+    "componentGenerics": {
+      "type": "object",
+      "description": "组件泛型（抽象节点）声明",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "options": {
+      "type": "object",
+      "description": "组件选项，如 multipleSlots / addGlobalClass / virtualHost / styleIsolation",
+      "additionalProperties": true,
+      "properties": {
+        "multipleSlots": {
+          "type": "boolean",
+          "description": "启用多 slot 支持"
+        },
+        "addGlobalClass": {
+          "type": "boolean",
+          "description": "允许页面样式影响组件（等价于 styleIsolation: apply-shared）"
+        },
+        "virtualHost": {
+          "type": "boolean",
+          "description": "将自定义节点设置成虚拟的，只渲染子节点"
+        },
+        "styleIsolation": {
+          "type": "string",
+          "enum": ["isolated", "apply-shared", "shared"],
+          "description": "组件样式隔离选项"
+        }
+      }
+    },
+    "externalClasses": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "组件接受的外部样式类名"
+    },
+    "virtualHost": {
+      "type": "boolean",
+      "description": "将自定义节点设置成虚拟节点（只渲染子节点）"
+    },
+    "export": {
+      "type": "string",
+      "description": "用于导出组件的模板结构，供其他文件引用"
+    },
+    "generics": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "抽象节点声明"
+    }
+  }
+}
