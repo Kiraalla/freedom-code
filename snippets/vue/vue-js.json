@@ -51,7 +51,7 @@
     "description": "watch as array"
   },
   "Vue3:computed": {
-    "prefix": "computed",
+    "prefix": "computed3",
     "body": [
       "computed(() => {",
       "\tget: () => {}",
@@ -70,7 +70,7 @@
     "description": "toRefs"
   },
   "Vue2:computed": {
-    "prefix": "computed",
+    "prefix": "computed2",
     "body": [
       "computed: {",
       "\t$1",
@@ -246,13 +246,6 @@
     ],
     "description": "defineComponent()"
   },
-  "defineAsyncComponent": {
-    "prefix": "defineAsyncComponent",
-    "body": [
-      "defineAsyncComponent"
-    ],
-    "description": "just a word"
-  },
   "defineAsyncComponentWithObj": {
     "prefix": "defineAsyncComponentWithObj",
     "body": [
@@ -284,26 +277,12 @@
     ],
     "description": "defineAsyncComponentWithObj"
   },
-  "resolveComponent": {
-    "prefix": "resolveComponent",
-    "body": [
-      "resolveComponent"
-    ],
-    "description": "just a word"
-  },
   "resolveComponentExpression": {
     "prefix": "resolveComponentExpression",
     "body": [
       "const MyComponent = resolveComponent('${2:MyComponent}')$0"
     ],
     "description": "const MyComponent = resolveComponent('MyComponent')"
-  },
-  "resolveDynamicComponent": {
-    "prefix": "resolveDynamicComponent",
-    "body": [
-      "resolveDynamicComponent"
-    ],
-    "description": "just a word"
   },
   "resolveDynamicComponentExpression": {
     "prefix": "resolveDynamicComponentExpression",
@@ -312,26 +291,12 @@
     ],
     "description": "const MyComponent = resolveDynamicComponent('MyComponent')"
   },
-  "resolveDirective ": {
-    "prefix": "resolveDirective ",
-    "body": [
-      "resolveDirective "
-    ],
-    "description": "just a word"
-  },
   "resolveDirective Expression": {
     "prefix": "resolveDirective",
     "body": [
       "const highlightDirective = resolveDirective('${2:highlight}')$0"
     ],
     "description": "const highlightDirective = resolveDirective('highlight')"
-  },
-  "withDirectives ": {
-    "prefix": "withDirectives ",
-    "body": [
-      "withDirectives "
-    ],
-    "description": "just a word"
   },
   "extend": {
     "prefix": "vueExtend",
@@ -443,27 +408,6 @@
     ],
     "description": "The data object for the Vue instance."
   },
-  "props": {
-    "prefix": "props",
-    "body": [
-      "props"
-    ],
-    "description": "A list/hash of attributes that are exposed to accept data from the parent component. "
-  },
-  "propsData": {
-    "prefix": "propsData",
-    "body": [
-      "propsData"
-    ],
-    "description": "Restriction: only respected in instance creation via `new`. Pass props to an instance during its creation. This is primarily intended to make unit testing easier."
-  },
-  "scopedSlots": {
-    "prefix": "scopedSlots",
-    "body": [
-      "scopedSlots"
-    ],
-    "description": "just a word"
-  },
   "computedV2": {
     "prefix": "computedV2",
     "body": [
@@ -503,20 +447,6 @@
       "},$0"
     ],
     "description": "Vue Watcher with options."
-  },
-  "el": {
-    "prefix": "el",
-    "body": [
-      "el"
-    ],
-    "description": "just a word"
-  },
-  "template": {
-    "prefix": "template",
-    "body": [
-      "template"
-    ],
-    "description": "just a word"
   },
   "render": {
     "prefix": "render",
@@ -670,125 +600,6 @@
       "},"
     ],
     "description": "Called when virtual DOM re-render is triggered. "
-  },
-  "directives": {
-    "prefix": "directives",
-    "body": [
-      "directives"
-    ],
-    "description": "just a word"
-  },
-  "filters": {
-    "prefix": "filters",
-    "body": [
-      "filters"
-    ],
-    "description": "just a word"
-  },
-  "componentWord": {
-    "prefix": "component",
-    "body": [
-      "component"
-    ],
-    "description": "just a word"
-  },
-  "components": {
-    "prefix": "components",
-    "body": [
-      "components"
-    ],
-    "description": "just a word"
-  },
-  "parent": {
-    "prefix": "parent",
-    "body": [
-      "parent"
-    ],
-    "description": "just a word"
-  },
-  "mixins": {
-    "prefix": "mixins",
-    "body": [
-      "mixins"
-    ],
-    "description": "just a word"
-  },
-  "extends": {
-    "prefix": "extends",
-    "body": [
-      "extends"
-    ],
-    "description": "just a word"
-  },
-  "provide": {
-    "prefix": "provide",
-    "body": [
-      "provide"
-    ],
-    "description": "just a word"
-  },
-  "inject": {
-    "prefix": "inject",
-    "body": [
-      "inject"
-    ],
-    "description": "just a word"
-  },
-  "name": {
-    "prefix": "name",
-    "body": [
-      "name"
-    ],
-    "description": "just a word"
-  },
-  "delimiters": {
-    "prefix": "delimiters",
-    "body": [
-      "delimiters"
-    ],
-    "description": "just a word"
-  },
-  "functional": {
-    "prefix": "functional",
-    "body": [
-      "functional"
-    ],
-    "description": "just a word"
-  },
-  "model": {
-    "prefix": "model",
-    "body": [
-      "model"
-    ],
-    "description": "just a word"
-  },
-  "inheritAttrs": {
-    "prefix": "inheritAttrs",
-    "body": [
-      "inheritAttrs"
-    ],
-    "description": "just a word"
-  },
-  "comments": {
-    "prefix": "comments",
-    "body": [
-      "comments"
-    ],
-    "description": "just a word"
-  },
-  "deep": {
-    "prefix": "deep",
-    "body": [
-      "deep"
-    ],
-    "description": "just a word"
-  },
-  "immediate": {
-    "prefix": "immediate",
-    "body": [
-      "immediate"
-    ],
-    "description": "just a word"
   },
   "vm.$data": {
     "prefix": "vmData",
@@ -976,27 +787,6 @@
     ],
     "description": "createRenderer({ })"
   },
-  "renderToString": {
-    "prefix": "renderToString",
-    "body": [
-      "renderToString"
-    ],
-    "description": "just a word"
-  },
-  "renderToStream": {
-    "prefix": "renderToStream",
-    "body": [
-      "renderToStream"
-    ],
-    "description": "just a word"
-  },
-  "createBundleRenderer": {
-    "prefix": "createBundleRenderer",
-    "body": [
-      "createBundleRenderer"
-    ],
-    "description": "just a word"
-  },
   "bundleRenderer.renderToString": {
     "prefix": "bundleRendererRenderToString",
     "body": [
@@ -1183,41 +973,6 @@
     ],
     "description": "scrollBehavior (to, from, savedPosition) { }"
   },
-  "path": {
-    "prefix": "path",
-    "body": [
-      "path"
-    ],
-    "description": "just a word"
-  },
-  "alias": {
-    "prefix": "alias",
-    "body": [
-      "alias"
-    ],
-    "description": "just a word"
-  },
-  "mode": {
-    "prefix": "mode",
-    "body": [
-      "mode"
-    ],
-    "description": "just a word"
-  },
-  "children": {
-    "prefix": "children",
-    "body": [
-      "children"
-    ],
-    "description": "just a word"
-  },
-  "meta": {
-    "prefix": "meta",
-    "body": [
-      "meta"
-    ],
-    "description": "just a word"
-  },
   "newVuexStore": {
     "prefix": "newVuexStore",
     "body": [
@@ -1226,125 +981,6 @@
       "})"
     ],
     "description": "const store = new Vuex.Store({ })"
-  },
-  "state": {
-    "prefix": "state",
-    "body": [
-      "state"
-    ],
-    "description": "just a word"
-  },
-  "getters": {
-    "prefix": "getters",
-    "body": [
-      "getters"
-    ],
-    "description": "just a word"
-  },
-  "mutations": {
-    "prefix": "mutations",
-    "body": [
-      "mutations"
-    ],
-    "description": "just a word"
-  },
-  "actions": {
-    "prefix": "actions",
-    "body": [
-      "actions"
-    ],
-    "description": "just a word"
-  },
-  "modules": {
-    "prefix": "modules",
-    "body": [
-      "modules"
-    ],
-    "description": "just a word"
-  },
-  "plugins": {
-    "prefix": "plugins",
-    "body": [
-      "plugins"
-    ],
-    "description": "just a word"
-  },
-  "commit": {
-    "prefix": "commit",
-    "body": [
-      "commit"
-    ],
-    "description": "just a word"
-  },
-  "dispatch": {
-    "prefix": "dispatch",
-    "body": [
-      "dispatch"
-    ],
-    "description": "just a word"
-  },
-  "replaceState": {
-    "prefix": "replaceState",
-    "body": [
-      "replaceState"
-    ],
-    "description": "just a word"
-  },
-  "subscribe": {
-    "prefix": "subscribe",
-    "body": [
-      "subscribe"
-    ],
-    "description": "just a word"
-  },
-  "registerModule": {
-    "prefix": "registerModule",
-    "body": [
-      "registerModule"
-    ],
-    "description": "just a word"
-  },
-  "unregisterModule": {
-    "prefix": "unregisterModule",
-    "body": [
-      "unregisterModule"
-    ],
-    "description": "just a word"
-  },
-  "hotUpdate": {
-    "prefix": "hotUpdate",
-    "body": [
-      "hotUpdate"
-    ],
-    "description": "just a word"
-  },
-  "mapState": {
-    "prefix": "mapState",
-    "body": [
-      "mapState"
-    ],
-    "description": "just a word"
-  },
-  "mapGetters": {
-    "prefix": "mapGetters",
-    "body": [
-      "mapGetters"
-    ],
-    "description": "just a word"
-  },
-  "mapActions": {
-    "prefix": "mapActions",
-    "body": [
-      "mapActions"
-    ],
-    "description": "just a word"
-  },
-  "mapMutations": {
-    "prefix": "mapMutations",
-    "body": [
-      "mapMutations"
-    ],
-    "description": "just a word"
   },
   "asyncData": {
     "prefix": "asyncData",
@@ -1376,122 +1012,10 @@
     ],
     "description": "const obj = readonly()"
   },
-  "isProxy": {
-    "prefix": "isProxy",
-    "body": [
-      "isProxy"
-    ],
-    "description": "just a word"
-  },
-  "isReactive": {
-    "prefix": "isReactive",
-    "body": [
-      "isReactive"
-    ],
-    "description": "just a word"
-  },
-  "isReadonly": {
-    "prefix": "isReadonly",
-    "body": [
-      "isReadonly"
-    ],
-    "description": "just a word"
-  },
-  "toRaw": {
-    "prefix": "toRaw",
-    "body": [
-      "toRaw"
-    ],
-    "description": "just a word"
-  },
-  "markRaw": {
-    "prefix": "markRaw",
-    "body": [
-      "markRaw"
-    ],
-    "description": "just a word"
-  },
-  "shallowReactive": {
-    "prefix": "shallowReactive",
-    "body": [
-      "shallowReactive"
-    ],
-    "description": "just a word"
-  },
-  "ref": {
-    "prefix": "ref",
-    "body": [
-      "ref"
-    ],
-    "description": "just a word"
-  },
-  "unref": {
-    "prefix": "unref",
-    "body": [
-      "unref"
-    ],
-    "description": "just a word"
-  },
-  "toRef": {
-    "prefix": "toRef",
-    "body": [
-      "toRef"
-    ],
-    "description": "just a word"
-  },
-  "toRefs": {
-    "prefix": "toRefs",
-    "body": [
-      "toRefs"
-    ],
-    "description": "just a word"
-  },
-  "isRef": {
-    "prefix": "isRef",
-    "body": [
-      "isRef"
-    ],
-    "description": "just a word"
-  },
-  "customRef": {
-    "prefix": "customRef",
-    "body": [
-      "customRef"
-    ],
-    "description": "just a word"
-  },
-  "shallowRef": {
-    "prefix": "shallowRef",
-    "body": [
-      "shallowRef"
-    ],
-    "description": "just a word"
-  },
-  "triggerRef": {
-    "prefix": "triggerRef",
-    "body": [
-      "triggerRef"
-    ],
-    "description": "just a word"
-  },
-  "computed": {
-    "prefix": "computed",
-    "body": [
-      "computed"
-    ],
-    "description": "just a word"
-  },
   "watchEffect": {
     "prefix": "watchEffect",
     "body": [
       "watchEffect($1)"
-    ],
-    "description": "just a word"
-  },
-  "watch": {
-    "prefix": "watch",
-    "body": [
-      "watch"
     ],
     "description": "just a word"
   },

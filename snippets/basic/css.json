@@ -95,22 +95,27 @@
   },
   "align-items: baseline": {
     "prefix": "aib",
+    "description": "CSS: align-items: baseline",
     "body": "align-items: baseline;"
   },
   "align-items: center": {
     "prefix": "aic",
+    "description": "CSS: align-items: center",
     "body": "align-items: center;"
   },
   "align-items: flex-start": {
     "prefix": "aifs",
+    "description": "CSS: align-items: flex-start",
     "body": "align-items: flex-start;"
   },
   "align-items: flex-end": {
     "prefix": "aife",
+    "description": "CSS: align-items: flex-end",
     "body": "align-items: flex-end;"
   },
   "align-items: stretch": {
     "prefix": "ais",
+    "description": "CSS: align-items: stretch",
     "body": "align-items: stretch;"
   },
   "align-self": {
@@ -125,6 +130,7 @@
   },
   "animation-delay": {
     "prefix": "anide",
+    "description": "CSS: animation-delay",
     "body": "animation-delay: ${0:1s};"
   },
   "animation-direction": {
@@ -134,6 +140,7 @@
   },
   "animation-duratuion": {
     "prefix": "anidu",
+    "description": "CSS: animation-duratuion",
     "body": "animation-duration: ${0:1s};"
   },
   "animation-fill-mode": {
@@ -148,6 +155,7 @@
   },
   "animation-name": {
     "prefix": "anin",
+    "description": "CSS: animation-name",
     "body": "animation-name: ${0:name};"
   },
   "animation-play-state": {
@@ -172,6 +180,7 @@
   },
   "background-color": {
     "prefix": "bgc",
+    "description": "CSS: background-color",
     "body": "background-color: ${0:#fff};"
   },
   "background-clip": {
@@ -181,6 +190,7 @@
   },
   "background-image": {
     "prefix": "bgi",
+    "description": "CSS: background-image",
     "body": "background-image: url('${0:background.jpg}');"
   },
   "background-origin": {
@@ -190,6 +200,7 @@
   },
   "background-position": {
     "prefix": "bgp",
+    "description": "CSS: background-position",
     "body": "background-position: ${1:left} ${2:top};"
   },
   "background-repeat": {
@@ -199,66 +210,82 @@
   },
   "background-repeat: repeat": {
     "prefix": "bgrr",
+    "description": "CSS: background-repeat: repeat",
     "body": "background-repeat: repeat;"
   },
   "background-repeat: repeat-x": {
     "prefix": "bgrx",
+    "description": "CSS: background-repeat: repeat-x",
     "body": "background-repeat: repeat-x;"
   },
   "background-repeat: repeat-y": {
     "prefix": "bgry",
+    "description": "CSS: background-repeat: repeat-y",
     "body": "background-repeat: repeat-y;"
   },
   "background-repeat: no-repeat": {
     "prefix": "bgrn",
+    "description": "CSS: background-repeat: no-repeat",
     "body": "background-repeat: no-repeat;"
   },
   "background-size": {
     "prefix": "bgs",
+    "description": "CSS: background-size",
     "body": "background-size: ${0:cover};"
   },
   "border": {
     "prefix": "bor",
+    "description": "CSS: border",
     "body": "border: ${1:1px} ${2|solid,dashed,dotted,double,groove,ridge,inset,outset,none,hidden|} ${0:#000};"
   },
   "border: none": {
     "prefix": "born",
+    "description": "CSS: border: none",
     "body": "border: none;"
   },
   "border-color": {
     "prefix": "borc",
+    "description": "CSS: border-color",
     "body": "border-color: ${0:#000};"
   },
   "border-style": {
     "prefix": "bors",
+    "description": "CSS: border-style",
     "body": "border-style: ${1|solid,dashed,dotted,double,groove,ridge,inset,outset,none,hidden|};"
   },
   "border-width": {
     "prefix": "borw",
+    "description": "CSS: border-width",
     "body": "border-width: ${0:1px};"
   },
   "border-bottom": {
     "prefix": "borb",
+    "description": "CSS: border-bottom",
     "body": "border-bottom: ${1:1px} ${2|solid,dashed,dotted,double,groove,ridge,inset,outset,none,hidden|} ${0:#000};"
   },
   "border-left": {
     "prefix": "borl",
+    "description": "CSS: border-left",
     "body": "border-left: ${1:1px} ${2|solid,dashed,dotted,double,groove,ridge,inset,outset,none,hidden|} ${0:#000};"
   },
   "border-right": {
     "prefix": "borr",
+    "description": "CSS: border-right",
     "body": "border-right: ${1:1px} ${2|solid,dashed,dotted,double,groove,ridge,inset,outset,none,hidden|} ${0:#000};"
   },
   "border-top": {
     "prefix": "bort",
+    "description": "CSS: border-top",
     "body": "border-top: ${1:1px} ${2|solid,dashed,dotted,double,groove,ridge,inset,outset,none,hidden|} ${0:#000};"
   },
   "border-radius": {
     "prefix": "br",
+    "description": "CSS: border-radius",
     "body": "border-radius: ${0:2px};"
   },
   "bottom": {
     "prefix": "bot",
+    "description": "CSS: bottom",
     "body": "bottom: ${0:0};"
   },
   "box-shadow": {
@@ -273,14 +300,17 @@
   },
   "clear": {
     "prefix": "clr",
+    "description": "CSS: clear",
     "body": "clear: ${1|both,left,right,none|};"
   },
   "color": {
     "prefix": "col",
+    "description": "CSS: color",
     "body": "color: ${0:#000};"
   },
   "content": {
     "prefix": "con",
+    "description": "CSS: content",
     "body": "content: '$0';"
   },
   "cursor": {
@@ -290,40 +320,43 @@
   },
   "cursor: pointer": {
     "prefix": "curp",
+    "description": "CSS: cursor: pointer",
     "body": "cursor: pointer;"
   },
   "cursor: default": {
     "prefix": "curd",
+    "description": "CSS: cursor: default",
     "body": "cursor: default;"
   },
   "display": {
     "prefix": "dis",
+    "description": "CSS: display",
     "body": "display: ${1|none,block,inline,inline-block,flex,inline-flex,list-item,table,inline-table,table-caption,table-cell,table-row,table-row-group,table-column|};"
   },
   "display: block": {
     "prefix": "disb",
+    "description": "CSS: display: block",
     "body": "display: block;"
   },
   "display: inline-block": {
     "prefix": "disi",
+    "description": "CSS: display: inline-block",
     "body": "display: inline-block;"
   },
   "display: none": {
     "prefix": "disn",
+    "description": "CSS: display: none",
     "body": "display: none;"
   },
   "display: flex": {
     "prefix": "disf",
+    "description": "CSS: display: flex",
     "body": "display: flex;"
   },
   "flex": {
     "prefix": "flex",
     "body": "flex: ${1:1} ${2:1} ${3:auto};",
     "description": "flex: grow shrink basis"
-  },
-  "flex (alt)": {
-    "prefix": "fle",
-    "body": "flex: ${1:1} ${2:1} ${3:auto};"
   },
   "flex-direction": {
     "prefix": "fld",
@@ -332,14 +365,17 @@
   },
   "flex-direction: row": {
     "prefix": "fldr",
+    "description": "CSS: flex-direction: row",
     "body": "flex-direction: row;"
   },
   "flex-direction: column": {
     "prefix": "fldc",
+    "description": "CSS: flex-direction: column",
     "body": "flex-direction: column;"
   },
   "flex-flow": {
     "prefix": "flf",
+    "description": "CSS: flex-flow",
     "body": "flex-flow: ${1|row,row-reverse,column,column-reverse|} ${2|wrap,wrap-reverse,nowrap|};"
   },
   "flex-wrap": {
@@ -349,58 +385,72 @@
   },
   "float": {
     "prefix": "fl",
+    "description": "CSS: float",
     "body": "float: ${1|left,right,none|};"
   },
   "float: left": {
     "prefix": "fll",
+    "description": "CSS: float: left",
     "body": "float: left;"
   },
   "float: right": {
     "prefix": "flr",
+    "description": "CSS: float: right",
     "body": "float: right;"
   },
   "float: none": {
     "prefix": "fln",
+    "description": "CSS: float: none",
     "body": "float: none;"
   },
   "font-family": {
     "prefix": "ff",
+    "description": "CSS: font-family",
     "body": "font-family: ${0:arial};"
   },
   "font-size": {
     "prefix": "fz",
+    "description": "CSS: font-size",
     "body": "font-size: ${0:12px};"
   },
   "font-style": {
     "prefix": "fst",
+    "description": "CSS: font-style",
     "body": "font-style: ${1|italic,oblique,normal|};"
   },
   "font-style: italic": {
     "prefix": "fsti",
+    "description": "CSS: font-style: italic",
     "body": "font-style: italic;"
   },
   "font-style: normal": {
     "prefix": "fstn",
+    "description": "CSS: font-style: normal",
     "body": "font-style: normal;"
   },
   "font-style: oblique": {
     "prefix": "fsto",
+    "description": "CSS: font-style: oblique",
     "body": "font-style: oblique;"
   },
   "font-weight": {
     "prefix": "fw",
+    "description": "CSS: font-weight",
     "body": "font-weight: ${0:bold};"
   },
   "font-weight: bold": {
     "prefix": "fwb",
+    "description": "CSS: font-weight: bold",
     "body": "font-weight: bold;"
   },
   "font-weight: light": {
     "prefix": "fwl",
+    "description": "CSS: font-weight: light",
     "body": "font-weight: light;"
   },
   "font-weight: normal": {
     "prefix": "fwn",
+    "description": "CSS: font-weight: normal",
     "body": "font-weight: normal;"
   },
   "font": {
@@ -410,6 +460,7 @@
   },
   "height": {
     "prefix": "hei",
+    "description": "CSS: height",
     "body": "height: ${0:1px};"
   },
   "justify-content": {
@@ -419,22 +470,27 @@
   },
   "justify-content: flex-start": {
     "prefix": "jcfs",
+    "description": "CSS: justify-content: flex-start",
     "body": "justify-content: flex-start;"
   },
   "justify-content: flex-end": {
     "prefix": "jcfe",
+    "description": "CSS: justify-content: flex-end",
     "body": "justify-content: flex-end;"
   },
   "justify-content: center": {
     "prefix": "jcc",
+    "description": "CSS: justify-content: center",
     "body": "justify-content: center;"
   },
   "justify-content: space-around": {
     "prefix": "jcsa",
+    "description": "CSS: justify-content: space-around",
     "body": "justify-content: space-around;"
   },
   "justify-content: space-between": {
     "prefix": "jcsb",
+    "description": "CSS: justify-content: space-between",
     "body": "justify-content: space-between;"
   },
   "list-style": {
@@ -454,186 +510,232 @@
   },
   "list-style-type: circle": {
     "prefix": "listc",
+    "description": "CSS: list-style-type: circle",
     "body": "list-style-type: circle;"
   },
   "list-style-type: disc": {
     "prefix": "listd",
+    "description": "CSS: list-style-type: disc",
     "body": "list-style-type: disc;"
   },
   "list-style-type: none": {
     "prefix": "listn",
+    "description": "CSS: list-style-type: none",
     "body": "list-style-type: none;"
   },
   "list-style-type: square": {
     "prefix": "lists",
+    "description": "CSS: list-style-type: square",
     "body": "list-style-type: square;"
   },
   "list-style-type: lower-roman": {
     "prefix": "listlr",
+    "description": "CSS: list-style-type: lower-roman",
     "body": "list-style-type: lower-roman;"
   },
   "list-style-type: upper-roman": {
     "prefix": "listur",
+    "description": "CSS: list-style-type: upper-roman",
     "body": "list-style-type: upper-roman;"
   },
   "left": {
     "prefix": "lef",
+    "description": "CSS: left",
     "body": "left: ${0:0};"
   },
   "line-height": {
     "prefix": "lh",
+    "description": "CSS: line-height",
     "body": "line-height: ${0:1.5};"
   },
   "letter-spacing": {
     "prefix": "ls",
+    "description": "CSS: letter-spacing",
     "body": "letter-spacing: ${0:2px};"
   },
   "letter-spacing: normal": {
     "prefix": "lsn",
+    "description": "CSS: letter-spacing: normal",
     "body": "letter-spacing: normal;"
   },
   "margin": {
     "prefix": "mar",
+    "description": "CSS: margin",
     "body": "margin: ${0:0};"
   },
   "margin-bottom": {
     "prefix": "marb",
+    "description": "CSS: margin-bottom",
     "body": "margin-bottom: ${0:0};"
   },
   "margin-left": {
     "prefix": "marl",
+    "description": "CSS: margin-left",
     "body": "margin-left: ${0:0};"
   },
   "margin-right": {
     "prefix": "marr",
+    "description": "CSS: margin-right",
     "body": "margin-right: ${0:0};"
   },
   "margin-top": {
     "prefix": "mart",
+    "description": "CSS: margin-top",
     "body": "margin-top: ${0:0};"
   },
   "margin: 0 auto": {
     "prefix": "mara",
+    "description": "CSS: margin: 0 auto",
     "body": "margin: 0 auto;"
   },
   "min-height": {
     "prefix": "mih",
+    "description": "CSS: min-height",
     "body": "min-height: ${0:1px};"
   },
   "min-width": {
     "prefix": "miw",
+    "description": "CSS: min-width",
     "body": "min-width: ${0:1px};"
   },
   "max-height": {
     "prefix": "mah",
+    "description": "CSS: max-height",
     "body": "max-height: ${0:1px};"
   },
   "max-width": {
     "prefix": "maw",
+    "description": "CSS: max-width",
     "body": "max-width: ${0:1px};"
   },
   "opacity": {
     "prefix": "opa",
+    "description": "CSS: opacity",
     "body": "opacity: ${0:0};"
   },
   "overflow": {
     "prefix": "ov",
+    "description": "CSS: overflow",
     "body": "overflow: ${1|visible,hidden,scroll,auto,clip|};"
   },
   "overflow: auto": {
     "prefix": "ova",
+    "description": "CSS: overflow: auto",
     "body": "overflow: auto;"
   },
   "overflow: hidden": {
     "prefix": "ovh",
+    "description": "CSS: overflow: hidden",
     "body": "overflow: hidden;"
   },
   "overflow: scroll": {
     "prefix": "ovs",
+    "description": "CSS: overflow: scroll",
     "body": "overflow: scroll;"
   },
   "overflow: visible": {
     "prefix": "ovv",
+    "description": "CSS: overflow: visible",
     "body": "overflow: visible;"
   },
   "padding": {
     "prefix": "pad",
+    "description": "CSS: padding",
     "body": "padding: ${0:0};"
   },
   "padding-bottom": {
     "prefix": "padb",
+    "description": "CSS: padding-bottom",
     "body": "padding-bottom: ${0:0};"
   },
   "padding-left": {
     "prefix": "padl",
+    "description": "CSS: padding-left",
     "body": "padding-left: ${0:0};"
   },
   "padding-right": {
     "prefix": "padr",
+    "description": "CSS: padding-right",
     "body": "padding-right: ${0:0};"
   },
   "padding-top": {
     "prefix": "padt",
+    "description": "CSS: padding-top",
     "body": "padding-top: ${0:0};"
   },
   "position": {
     "prefix": "pos",
+    "description": "CSS: position",
     "body": "position: ${1|relative,absolute,fixed,sticky,static|};"
   },
   "position absolute": {
     "prefix": "posa",
+    "description": "CSS: position absolute",
     "body": "position: absolute;"
   },
   "position fixed": {
     "prefix": "posf",
+    "description": "CSS: position fixed",
     "body": "position: fixed;"
   },
   "position relative": {
     "prefix": "posr",
+    "description": "CSS: position relative",
     "body": "position: relative;"
   },
   "position sticky": {
     "prefix": "poss",
+    "description": "CSS: position sticky",
     "body": "position: sticky;"
   },
   "right": {
     "prefix": "rig",
+    "description": "CSS: right",
     "body": "right: ${0:0};"
   },
   "text-align": {
     "prefix": "ta",
+    "description": "CSS: text-align",
     "body": "text-align: ${1|center,left,right,justify,start,end|};"
   },
   "text-align: center": {
     "prefix": "tac",
+    "description": "CSS: text-align: center",
     "body": "text-align: center;"
   },
   "text-align: left": {
     "prefix": "tal",
+    "description": "CSS: text-align: left",
     "body": "text-align: left;"
   },
   "text-align: right": {
     "prefix": "tar",
+    "description": "CSS: text-align: right",
     "body": "text-align: right;"
   },
   "text-decoration": {
     "prefix": "td",
+    "description": "CSS: text-decoration",
     "body": "text-decoration: ${1|none,underline,overline,line-through|};"
   },
   "text-decoration: underline": {
     "prefix": "tdu",
+    "description": "CSS: text-decoration: underline",
     "body": "text-decoration: underline;"
   },
   "text-decoration: none": {
     "prefix": "tdn",
+    "description": "CSS: text-decoration: none",
     "body": "text-decoration: none;"
   },
   "text-decoration: line-through": {
     "prefix": "tdl",
+    "description": "CSS: text-decoration: line-through",
     "body": "text-decoration: line-through;"
   },
   "text-indent": {
     "prefix": "ti",
+    "description": "CSS: text-indent",
     "body": "text-indent: ${0:2em};"
   },
   "text-shadow": {
@@ -643,98 +745,117 @@
   },
   "text-transform": {
     "prefix": "tt",
+    "description": "CSS: text-transform",
     "body": "text-transform: ${1|capitalize,uppercase,lowercase,full-width,none|};"
   },
   "top": {
     "prefix": "top",
+    "description": "CSS: top",
     "body": "top: ${0:0};"
   },
   "vertical-align": {
     "prefix": "va",
+    "description": "CSS: vertical-align",
     "body": "vertical-align: ${1|baseline,middle,top,bottom,sub,super,text-top,text-bottom|};"
   },
   "vertical-align: bottom": {
     "prefix": "vab",
+    "description": "CSS: vertical-align: bottom",
     "body": "vertical-align: bottom;"
   },
   "vertical-align: middle": {
     "prefix": "vam",
+    "description": "CSS: vertical-align: middle",
     "body": "vertical-align: middle;"
   },
   "vertical-align: top": {
     "prefix": "vat",
+    "description": "CSS: vertical-align: top",
     "body": "vertical-align: top;"
   },
   "visibility": {
     "prefix": "vis",
+    "description": "CSS: visibility",
     "body": "visibility: ${1|visible,hidden,collapse|};"
   },
   "visibility: visible": {
     "prefix": "visv",
+    "description": "CSS: visibility: visible",
     "body": "visibility: visible;"
   },
   "visibility: hidden": {
     "prefix": "vish",
+    "description": "CSS: visibility: hidden",
     "body": "visibility: hidden;"
   },
   "word-break": {
     "prefix": "wb",
+    "description": "CSS: word-break",
     "body": "word-break: ${1|break-all,keep-all,break-word,normal|};"
   },
   "width": {
     "prefix": "wid",
+    "description": "CSS: width",
     "body": "width: ${0:0};"
   },
   "width: auto": {
     "prefix": "wida",
+    "description": "CSS: width: auto",
     "body": "width: auto;"
   },
   "white-space": {
     "prefix": "ws",
+    "description": "CSS: white-space",
     "body": "white-space: ${1|nowrap,pre,pre-wrap,pre-line,normal|};"
   },
   "white-space: nowrap": {
     "prefix": "wsn",
+    "description": "CSS: white-space: nowrap",
     "body": "white-space: nowrap;"
   },
   "white-space: pre": {
     "prefix": "wsp",
+    "description": "CSS: white-space: pre",
     "body": "white-space: pre;"
   },
   "word-wrap": {
     "prefix": "ww",
+    "description": "CSS: word-wrap",
     "body": "word-wrap: ${1|break-word,break-spaces,normal|};"
   },
   "z-index": {
     "prefix": "zi",
+    "description": "CSS: z-index",
     "body": "z-index: ${0:-1};"
   },
   "@import": {
     "prefix": "imp",
+    "description": "CSS: @import",
     "body": "@import '${0:filename}';"
   },
   "@mixin": {
     "prefix": "mix",
+    "description": "CSS: @mixin",
     "body": "@mixin ${1:name} {\n  $0\n}"
   },
   "@include": {
     "prefix": "inc",
+    "description": "CSS: @include",
     "body": "@include ${0:mixin};"
   },
   "@keyframes": {
     "prefix": "key",
+    "description": "CSS: @keyframes",
     "body": "@keyframes ${1:name} {\n  $0\n}"
   },
   "@media": {
     "prefix": "med",
+    "description": "CSS: @media",
     "body": "@media screen and (${1:max-width: 300px}) {\n  $0\n}"
   },
   "!important": {
     "prefix": "!",
-    "body": "!important"
-  },
-  "!important (alt)": {
-    "prefix": "i",
+    "description": "CSS: !important",
     "body": "!important"
   }
 }

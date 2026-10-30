@@ -24,14 +24,14 @@
 	"func": {
 		"prefix": "func",
 		"body": [
-			"function (${param}) {  }"
+			"function (${1:param}) {  }"
 		],
 		"description": "An anonymous function."
 	},
 	"jqAfter": {
 		"prefix": "jqAfter",
 		"body": [
-			"$(${selector}).after(${content});"
+			"$(${1:selector}).after(${2:content});"
 		],
 		"description": "Insert content, specified by the parameter, after each element in the set of matched elements."
 	},
@@ -58,10 +58,10 @@
 		"prefix": "jqAjax",
 		"body": [
 			"$.ajax({",
-			"\ttype: \"${method}\",",
-			"\turl: \"${url}\",",
-			"\tdata: \"${data}\",",
-			"\tdataType: \"${dataType}\",",
+			"\ttype: \"${1:method}\",",
+			"\turl: \"${2:url}\",",
+			"\tdata: \"${3:data}\",",
+			"\tdataType: \"${4:dataType}\",",
 			"\tsuccess: function (response) {",
 			"\t\t$0",
 			"\t}",
@@ -75,9 +75,9 @@
 			"$.ajax({",
 			"\ttype: \"POST\",",
 			"\tcontentType: \"application/json; charset=utf-8\",",
-			"\tdataType: \"${dataType}\",",
-			"\turl: \"${url}\",",
-			"\tdata: \"${data}\",",
+			"\tdataType: \"${1:dataType}\",",
+			"\turl: \"${2:url}\",",
+			"\tdata: \"${3:data}\",",
 			"\tsuccess: function (response) {",
 			"\t\t$0",
 			"\t}",
@@ -88,42 +88,42 @@
 	"jqAppend": {
 		"prefix": "jqAppend",
 		"body": [
-			"$(${selector}).append(${content});"
+			"$(${1:selector}).append(${2:content});"
 		],
 		"description": "Insert content, specified by the parameter, to the end of each element in the set of matched elements."
 	},
 	"jqAppendTo": {
 		"prefix": "jqAppendTo",
 		"body": [
-			"$(${content}).appendTo(${selector});"
+			"$(${1:content}).appendTo(${2:selector});"
 		],
 		"description": "Insert every element in the set of matched elements to the end of the target."
 	},
 	"jqAttrGet": {
 		"prefix": "jqAttrGet",
 		"body": [
-			"$(${selector}).attr(${attributeName});"
+			"$(${1:selector}).attr(${2:attributeName});"
 		],
 		"description": "Get the value of an attribute for the first element in the set of matched elements."
 	},
 	"jqAttrRemove": {
 		"prefix": "jqAttrRemove",
 		"body": [
-			"$(${selector}).removeAttr(${attributeName});"
+			"$(${1:selector}).removeAttr(${2:attributeName});"
 		],
 		"description": "Remove an attribute from each element in the set of matched elements."
 	},
 	"jqAttrSet": {
 		"prefix": "jqAttrSet",
 		"body": [
-			"$(${selector}).attr(${attributeName}, ${value});"
+			"$(${1:selector}).attr(${2:attributeName}, ${3:value});"
 		],
 		"description": "Set one or more attributes for the set of matched elements."
 	},
 	"jqAttrSetFn": {
 		"prefix": "jqAttrSetFn",
 		"body": [
-			"$(${selector}).attr(${attributeName}, function (index, attr) { ",
+			"$(${1:selector}).attr(${2:attributeName}, function (index, attr) { ",
 			"\t$0 ",
 			"});"
 		],
@@ -132,8 +132,8 @@
 	"jqAttrSetObj": {
 		"prefix": "jqAttrSetObj",
 		"body": [
-			"$(${selector}).attr({",
-			"\t${name}: ${value}",
+			"$(${1:selector}).attr({",
+			"\t${2:name}: ${3:value}",
 			"\t$0",
 			"});"
 		],
@@ -142,14 +142,14 @@
 	"jqBefore": {
 		"prefix": "jqBefore",
 		"body": [
-			"$(${selector}).before(${content});"
+			"$(${1:selector}).before(${2:content});"
 		],
 		"description": "Insert content, specified by the parameter, before each element in the set of matched elements."
 	},
 	"jqBind": {
 		"prefix": "jqBind",
 		"body": [
-			"$(${selector}).bind(${eventType}, function (e) {",
+			"$(${1:selector}).bind(${2:eventType}, function (e) {",
 			"\t$0",
 			"});"
 		],
@@ -158,7 +158,7 @@
 	"jqBindWithData": {
 		"prefix": "jqBindWithData",
 		"body": [
-			"$(${selector}).bind(${eventType}, ${eventData}, function (e) {",
+			"$(${1:selector}).bind(${2:eventType}, ${3:eventData}, function (e) {",
 			"\t$0",
 			"});"
 		],
@@ -167,7 +167,7 @@
 	"jqBlur": {
 		"prefix": "jqBlur",
 		"body": [
-			"$(${selector}).blur(function (e) { ",
+			"$(${1:selector}).blur(function (e) { ",
 			"\te.preventDefault();",
 			"\t$0",
 			"});"
@@ -177,7 +177,7 @@
 	"jqChange": {
 		"prefix": "jqChange",
 		"body": [
-			"$(${selector}).change(function (e) { ",
+			"$(${1:selector}).change(function (e) { ",
 			"\te.preventDefault();",
 			"\t$0",
 			"});"
@@ -187,35 +187,35 @@
 	"jqClassAdd": {
 		"prefix": "jqClassAdd",
 		"body": [
-			"$(${selector}).addClass(${className});"
+			"$(${1:selector}).addClass(${2:className});"
 		],
 		"description": "Adds the specified class(es) to each of the set of matched elements."
 	},
 	"jqClassRemove": {
 		"prefix": "jqClassRemove",
 		"body": [
-			"$(${selector}).removeClass(${className});"
+			"$(${1:selector}).removeClass(${2:className});"
 		],
 		"description": "Remove a single class, multiple classes, or all classes from each element in the set of matched elements."
 	},
 	"jqClassToggle": {
 		"prefix": "jqClassToggle",
 		"body": [
-			"$(${selector}).toggleClass(${className});"
+			"$(${1:selector}).toggleClass(${2:className});"
 		],
 		"description": "Add or remove one or more classes from each element in the set of matched elements, depending on either the class\u0027s presence."
 	},
 	"jqClassToggleSwitch": {
 		"prefix": "jqClassToggleSwitch",
 		"body": [
-			"$(${selector}).toggleClass(${className}, ${switch});"
+			"$(${1:selector}).toggleClass(${2:className}, ${3:switch});"
 		],
 		"description": "Add or remove one or more classes from each element in the set of matched elements, depending on either the class\u0027s presence or the value of the switch argument."
 	},
 	"jqClick": {
 		"prefix": "jqClick",
 		"body": [
-			"$(${selector}).click(function (e) { ",
+			"$(${1:selector}).click(function (e) { ",
 			"\te.preventDefault();",
 			"\t$0",
 			"});"
@@ -225,36 +225,36 @@
 	"jqClone": {
 		"prefix": "jqClone",
 		"body": [
-			"$(${selector}).clone();"
+			"$(${1:selector}).clone();"
 		],
 		"description": "Create a deep copy of the set of matched elements."
 	},
 	"jqCloneWithEvents": {
 		"prefix": "jqCloneWithEvents",
 		"body": [
-			"$(${selector}).clone(true);"
+			"$(${1:selector}).clone(true);"
 		],
 		"description": "Create a deep copy of the set of matched elements."
 	},
 	"jqCssGet": {
 		"prefix": "jqCssGet",
 		"body": [
-			"$(${selector}).css(${propertyName});"
+			"$(${1:selector}).css(${2:propertyName});"
 		],
 		"description": "Get the computed style properties for the first element in the set of matched elements."
 	},
 	"jqCssSet": {
 		"prefix": "jqCssSet",
 		"body": [
-			"$(${selector}).css(${propertyName}, ${value});"
+			"$(${1:selector}).css(${2:propertyName}, ${3:value});"
 		],
 		"description": "Set one or more CSS properties for the set of matched elements."
 	},
 	"jqCssSetObj": {
 		"prefix": "jqCssSetObj",
 		"body": [
-			"$(${selector}).css({",
-			"\t${propertyName}: ${value}",
+			"$(${1:selector}).css({",
+			"\t${2:propertyName}: ${3:value}",
 			"\t$0",
 			"});"
 		],
@@ -263,29 +263,29 @@
 	"jqDataGet": {
 		"prefix": "jqDataGet",
 		"body": [
-			"$(${selector}).data(${key});"
+			"$(${1:selector}).data(${2:key});"
 		],
 		"description": "Return the value at the named data store for the first element in the jQuery collection, as set by data(name, value) or by an HTML5 data-* attribute."
 	},
 	"jqDataRemove": {
 		"prefix": "jqDataRemove",
 		"body": [
-			"$(${selector}).removeData(${element});"
+			"$(${1:selector}).removeData(${2:element});"
 		],
 		"description": "Remove a previously-stored piece of data."
 	},
 	"jqDataSet": {
 		"prefix": "jqDataSet",
 		"body": [
-			"$(${selector}).data(${key}, ${value});"
+			"$(${1:selector}).data(${2:key}, ${3:value});"
 		],
 		"description": "Store arbitrary data associated with the matched elements."
 	},
 	"jqDataSetObj": {
 		"prefix": "jqDataSetObj",
 		"body": [
-			"$(${selector}).data({",
-			"\t${key}: ${value}",
+			"$(${1:selector}).data({",
+			"\t${2:key}: ${3:value}",
 			"\t$0",
 			"});"
 		],
@@ -294,21 +294,21 @@
 	"jqDie": {
 		"prefix": "jqDie",
 		"body": [
-			"$(${selector}).die(${eventType});"
+			"$(${1:selector}).die(${2:eventType});"
 		],
 		"description": "Remove event handlers previously attached using .live() from the elements."
 	},
 	"jqDieAll": {
 		"prefix": "jqDieAll",
 		"body": [
-			"$(${selector}).die();"
+			"$(${1:selector}).die();"
 		],
 		"description": "Remove event handlers previously attached using .live() from the elements."
 	},
 	"jqDieFn": {
 		"prefix": "jqDieFn",
 		"body": [
-			"$(${selector}).die(${eventType}, ${handler});"
+			"$(${1:selector}).die(${2:eventType}, ${3:handler});"
 		],
 		"description": "Remove event handlers previously attached using .live() from the elements."
 	},
@@ -333,7 +333,7 @@
 	"jqEach": {
 		"prefix": "jqEach",
 		"body": [
-			"$.each(${collection}, function (indexInArray, valueOfElement) { ",
+			"$.each(${1:collection}, function (indexInArray, valueOfElement) { ",
 			"\t$0 ",
 			"});"
 		],
@@ -342,7 +342,7 @@
 	"jqEachElement": {
 		"prefix": "jqEachElement",
 		"body": [
-			"$(${selector}).each(function (index, element) {",
+			"$(${1:selector}).each(function (index, element) {",
 			"\t// element == this",
 			"\t$0",
 			"});"
@@ -352,21 +352,21 @@
 	"jqEmpty": {
 		"prefix": "jqEmpty",
 		"body": [
-			"$(${selector}).empty();"
+			"$(${1:selector}).empty();"
 		],
 		"description": "Remove all child nodes of the set of matched elements from the DOM."
 	},
 	"jqFadeIn": {
 		"prefix": "jqFadeIn",
 		"body": [
-			"$(${selector}).fadeIn();"
+			"$(${1:selector}).fadeIn();"
 		],
 		"description": "Display the matched elements by fading them to opaque."
 	},
 	"jqFadeInFull": {
 		"prefix": "jqFadeInFull",
 		"body": [
-			"$(${selector}).fadeIn(${duration}, function () {",
+			"$(${1:selector}).fadeIn(${2:duration}, function () {",
 			"\t$0",
 			"});"
 		],
@@ -375,14 +375,14 @@
 	"jqFadeOut": {
 		"prefix": "jqFadeOut",
 		"body": [
-			"$(${selector}).fadeOut();"
+			"$(${1:selector}).fadeOut();"
 		],
 		"description": "Hide the matched elements by fading them to transparent."
 	},
 	"jqFadeOutFull": {
 		"prefix": "jqFadeOutFull",
 		"body": [
-			"$(${selector}).fadeOut(${duration}, function () {",
+			"$(${1:selector}).fadeOut(${2:duration}, function () {",
 			"\t$0",
 			"});"
 		],
@@ -391,14 +391,14 @@
 	"jqFadeTo": {
 		"prefix": "jqFadeTo",
 		"body": [
-			"$(${selector}).fadeTo(${duration}, ${opacity});"
+			"$(${1:selector}).fadeTo(${2:duration}, ${3:opacity});"
 		],
 		"description": "Adjust the opacity of the matched elements."
 	},
 	"jqFadeToFull": {
 		"prefix": "jqFadeToFull",
 		"body": [
-			"$(${selector}).fadeTo(${duration}, ${opacity}, function () {",
+			"$(${1:selector}).fadeTo(${2:duration}, ${3:opacity}, function () {",
 			"\t$0",
 			"});"
 		],
@@ -407,14 +407,14 @@
 	"jqFind": {
 		"prefix": "jqFind",
 		"body": [
-			"$(${selector}).find(${selector2});"
+			"$(${1:selector}).find(${2:selector2});"
 		],
 		"description": "Get the descendants of each element in the current set of matched elements, filtered by a selector, jQuery object, or element."
 	},
 	"jqFocus": {
 		"prefix": "jqFocus",
 		"body": [
-			"$(${selector}).focus(function (e) { ",
+			"$(${1:selector}).focus(function (e) { ",
 			"\te.preventDefault();",
 			"\t$0",
 			"});"
@@ -424,11 +424,11 @@
 	"jqGet": {
 		"prefix": "jqGet",
 		"body": [
-			"$.get(\"${url}\", ${data},",
+			"$.get(\"${1:url}\", ${2:data},",
 			"\tfunction (data, textStatus, jqXHR) {",
 			"\t\t$0",
 			"\t},",
-			"\t\"${dataType}\"",
+			"\t\"${3:dataType}\"",
 			");"
 		],
 		"description": "Load data from the server using a HTTP GET request."
@@ -436,7 +436,7 @@
 	"jqGetJson": {
 		"prefix": "jqGetJson",
 		"body": [
-			"$.getJSON(\"${url}\", ${data},",
+			"$.getJSON(\"${1:url}\", ${2:data},",
 			"\tfunction (data, textStatus, jqXHR) {",
 			"\t\t$0",
 			"\t}",
@@ -447,7 +447,7 @@
 	"jqGetScript": {
 		"prefix": "jqGetScript",
 		"body": [
-			"$.getScript(\"${url}\", function (script, textStatus, jqXHR) {",
+			"$.getScript(\"${1:url}\", function (script, textStatus, jqXHR) {",
 			"\t$0",
 			"});"
 		],
@@ -456,35 +456,35 @@
 	"jqHasClass": {
 		"prefix": "jqHasClass",
 		"body": [
-			"$(${selector}).hasClass(${className});"
+			"$(${1:selector}).hasClass(${2:className});"
 		],
 		"description": "Determine whether any of the matched elements are assigned the given class."
 	},
 	"jqHeightGet": {
 		"prefix": "jqHeightGet",
 		"body": [
-			"$(${selector}).height();"
+			"$(${1:selector}).height();"
 		],
 		"description": "Get the current computed height for the first element in the set of matched elements."
 	},
 	"jqHeightSet": {
 		"prefix": "jqHeightSet",
 		"body": [
-			"$(${selector}).height(${value});"
+			"$(${1:selector}).height(${2:value});"
 		],
 		"description": "Set the CSS height of every matched element."
 	},
 	"jqHide": {
 		"prefix": "jqHide",
 		"body": [
-			"$(${selector}).hide();"
+			"$(${1:selector}).hide();"
 		],
 		"description": "Hide the matched elements."
 	},
 	"jqHideFull": {
 		"prefix": "jqHideFull",
 		"body": [
-			"$(${selector}).hide(${duration}, function () {",
+			"$(${1:selector}).hide(${2:duration}, function () {",
 			"\t$0",
 			"});"
 		],
@@ -493,7 +493,7 @@
 	"jqHover": {
 		"prefix": "jqHover",
 		"body": [
-			"$(${selector}).hover(function () {",
+			"$(${1:selector}).hover(function () {",
 			"\t\t// over",
 			"\t\t$0",
 			"\t}, function () {",
@@ -506,49 +506,49 @@
 	"jqHtmlGet": {
 		"prefix": "jqHtmlGet",
 		"body": [
-			"$(${selector}).html();"
+			"$(${1:selector}).html();"
 		],
 		"description": "Get the HTML contents of the first element in the set of matched elements."
 	},
 	"jqHtmlSet": {
 		"prefix": "jqHtmlSet",
 		"body": [
-			"$(${selector}).html(${htmlString});"
+			"$(${1:selector}).html(${2:htmlString});"
 		],
 		"description": "Set the HTML contents of each element in the set of matched elements."
 	},
 	"jqInnerHeight": {
 		"prefix": "jqInnerHeight",
 		"body": [
-			"$(${selector}).innerHeight();"
+			"$(${1:selector}).innerHeight();"
 		],
 		"description": "Get the current computed height for the first element in the set of matched elements, including padding but not border."
 	},
 	"jqInnerWidth": {
 		"prefix": "jqInnerWidth",
 		"body": [
-			"$(${selector}).innerWidth();"
+			"$(${1:selector}).innerWidth();"
 		],
 		"description": "Get the current computed inner width for the first element in the set of matched elements, including padding but not border."
 	},
 	"jqInsertAfter": {
 		"prefix": "jqInsertAfter",
 		"body": [
-			"$(${target}).insertAfter(${selector});"
+			"$(${1:target}).insertAfter(${2:selector});"
 		],
 		"description": "Insert every element in the set of matched elements after the target."
 	},
 	"jqInsertBefore": {
 		"prefix": "jqInsertBefore",
 		"body": [
-			"$(${target}).insertBefore(${selector});"
+			"$(${1:target}).insertBefore(${2:selector});"
 		],
 		"description": "Insert every element in the set of matched elements before the target."
 	},
 	"jqKeyDown": {
 		"prefix": "jqKeyDown",
 		"body": [
-			"$(${selector}).keydown(function (e) { ",
+			"$(${1:selector}).keydown(function (e) { ",
 			"\t$0",
 			"});"
 		],
@@ -557,7 +557,7 @@
 	"jqKeyPress": {
 		"prefix": "jqKeyPress",
 		"body": [
-			"$(${selector}).keypress(function (e) { ",
+			"$(${1:selector}).keypress(function (e) { ",
 			"\t$0",
 			"});"
 		],
@@ -566,7 +566,7 @@
 	"jqKeyUp": {
 		"prefix": "jqKeyUp",
 		"body": [
-			"$(${selector}).keyup(function (e) { ",
+			"$(${1:selector}).keyup(function (e) { ",
 			"\t$0",
 			"});"
 		],
@@ -575,7 +575,7 @@
 	"jqLoadGet": {
 		"prefix": "jqLoadGet",
 		"body": [
-			"$(${selector}).load(\"${url}\", \"${data}\", function (response, status, request) {",
+			"$(${1:selector}).load(\"${2:url}\", \"${3:data}\", function (response, status, request) {",
 			"\tthis; // dom element",
 			"\t$0",
 			"});"
@@ -585,7 +585,7 @@
 	"jqLoadPost": {
 		"prefix": "jqLoadPost",
 		"body": [
-			"$(${selector}).load(\"${url}\", \"${data}\", function (response, status, request) {",
+			"$.post(\"${1:url}\", ${2:data}, function (response, status, request) {",
 			"\tthis; // dom element",
 			"\t$0",
 			"});"
@@ -595,7 +595,7 @@
 	"jqMap": {
 		"prefix": "jqMap",
 		"body": [
-			"$.map(${arrayOrObject}, function (elementOrValue, indexOrKey) {",
+			"$.map(${1:arrayOrObject}, function (elementOrValue, indexOrKey) {",
 			"\t$0",
 			"});"
 		],
@@ -604,7 +604,7 @@
 	"jqMouseDown": {
 		"prefix": "jqMouseDown",
 		"body": [
-			"$(${selector}).mousedown(function () { ",
+			"$(${1:selector}).mousedown(function () { ",
 			"\t$0",
 			"});"
 		],
@@ -613,7 +613,7 @@
 	"jqMouseEnter": {
 		"prefix": "jqMouseEnter",
 		"body": [
-			"$(${selector}).mouseenter(function () { ",
+			"$(${1:selector}).mouseenter(function () { ",
 			"\t$0",
 			"});"
 		],
@@ -622,7 +622,7 @@
 	"jqMouseLeave": {
 		"prefix": "jqMouseLeave",
 		"body": [
-			"$(${selector}).mouseleave(function () { ",
+			"$(${1:selector}).mouseleave(function () { ",
 			"\t$0",
 			"});"
 		],
@@ -631,7 +631,7 @@
 	"jqMouseMove": {
 		"prefix": "jqMouseMove",
 		"body": [
-			"$(${selector}).mousemove(function (e) { ",
+			"$(${1:selector}).mousemove(function (e) { ",
 			"\t// values: e.clientX, e.clientY, e.pageX, e.pageY",
 			"\t$0",
 			"});"
@@ -641,7 +641,7 @@
 	"jqMouseOut": {
 		"prefix": "jqMouseOut",
 		"body": [
-			"$(${selector}).mouseout(function () { ",
+			"$(${1:selector}).mouseout(function () { ",
 			"\t$0",
 			"});"
 		],
@@ -650,7 +650,7 @@
 	"jqMouseOver": {
 		"prefix": "jqMouseOver",
 		"body": [
-			"$(${selector}).mouseover(function () { ",
+			"$(${1:selector}).mouseover(function () { ",
 			"\t$0",
 			"});"
 		],
@@ -659,7 +659,7 @@
 	"jqMouseUp": {
 		"prefix": "jqMouseUp",
 		"body": [
-			"$(${selector}).mouseup(function () { ",
+			"$(${1:selector}).mouseup(function () { ",
 			"\t$0",
 			"});"
 		],
@@ -668,12 +668,12 @@
 	"jqNamespace": {
 		"prefix": "jqNamespace",
 		"body": [
-			"(function ( ${name}, $, undefined ) {",
+			"(function ( ${1:name}, $, undefined ) {",
 			"\t// Private Property",
 			"\tmyPrivateProperty = \"Private Property\";",
 			"\t\t",
 			"\t// Public Property",
-			"\t${name}.myPublicProperty = \"Publically Accessible Property\";",
+			"\t${1:name}.myPublicProperty = \"Publically Accessible Property\";",
 			"\t\t",
 			"\t// Private Method",
 			"\tfunction myPrivateMethod () {",
@@ -681,17 +681,17 @@
 			"\t}",
 			"\t\t",
 			"\t// Public Method",
-			"\t${name}.myPublicMethod = function () {",
+			"\t${1:name}.myPublicMethod = function () {",
 			"\t\t",
 			"\t};  ",
-			"}(window.${name} = window.${name} || {}, jQuery ));"
+			"}(window.${1:name} = window.${1:name} || {}, jQuery ));"
 		],
 		"description": "A namespace template. ref: http://enterprisejquery.com/2010/10/how-good-c-habits-can-encourage-bad-javascript-habits-part-1/"
 	},
 	"jqOffsetGet": {
 		"prefix": "jqOffsetGet",
 		"body": [
-			"var offset = $(${selector}).offset();",
+			"var offset = $(${1:selector}).offset();",
 			"var top = offset.top;",
 			"var left = offset.left;",
 			"$0"
@@ -701,7 +701,7 @@
 	"jqOffsetParent": {
 		"prefix": "jqOffsetParent",
 		"body": [
-			"var offset = $(${selector}).offsetParent();",
+			"var offset = $(${1:selector}).offsetParent();",
 			"var top = offset.top;",
 			"var left = offset.left;",
 			"$0"
@@ -711,7 +711,7 @@
 	"jqOn": {
 		"prefix": "jqOn",
 		"body": [
-			"$(${selector}).on(${events}, function () {",
+			"$(${1:selector}).on(${2:events}, function () {",
 			"\t$0",
 			"});"
 		],
@@ -720,7 +720,7 @@
 	"jqOne": {
 		"prefix": "jqOne",
 		"body": [
-			"$(${selector}).one(${events}, function (e) {",
+			"$(${1:selector}).one(${2:events}, function (e) {",
 			"\t$0",
 			"});"
 		],
@@ -729,7 +729,7 @@
 	"jqOneWithData": {
 		"prefix": "jqOneWithData",
 		"body": [
-			"$(${selector}).one(${events}, ${data}, function (e) {",
+			"$(${1:selector}).one(${2:events}, ${3:data}, function (e) {",
 			"\t$0",
 			"});"
 		],
@@ -738,14 +738,14 @@
 	"jqOuterHeight": {
 		"prefix": "jqOuterHeight",
 		"body": [
-			"$(${selector}).outerHeight(${includeMargin});"
+			"$(${1:selector}).outerHeight(${2:includeMargin});"
 		],
 		"description": "Get the current computed height for the first element in the set of matched elements, including padding, border, and optionally margin. Returns a number (without \"px\") representation of the value or null if called on an empty set of elements."
 	},
 	"jqOuterWidth": {
 		"prefix": "jqOuterWidth",
 		"body": [
-			"$(${selector}).outerWidth(${includeMargin});"
+			"$(${1:selector}).outerWidth(${2:includeMargin});"
 		],
 		"description": "Get the current computed width for the first element in the set of matched elements, including padding and border."
 	},
@@ -753,8 +753,8 @@
 		"prefix": "jqPlugin",
 		"body": [
 			"(function ($) {",
-			"\tjQuery.fn.${pluginName} = function (settings) {",
-			"\t\tvar config = {\u0027foo\u0027: \u0027bar\u0027};",
+			"\tjQuery.fn.${1:pluginName} = function (settings) {",
+			"\t\tvar config = {'foo': 'bar'};",
 			" ",
 			"\t\tif (settings) jQuery.extend(config, settings);",
 			" ",
@@ -772,7 +772,7 @@
 	"jqPosition": {
 		"prefix": "jqPosition",
 		"body": [
-			"var position = $(${selector}).position();",
+			"var position = $(${1:selector}).position();",
 			"var top = position.top;",
 			"var left = position.left;",
 			"$0"
@@ -782,11 +782,11 @@
 	"jqPost": {
 		"prefix": "jqPost",
 		"body": [
-			"$.post(\"${url}\", ${data},",
+			"$.post(\"${1:url}\", ${2:data},",
 			"\tfunction (data, textStatus, jqXHR) {",
 			"\t\t$0",
 			"\t},",
-			"\t\"${dataType}\"",
+			"\t\"${3:dataType}\"",
 			");"
 		],
 		"description": "Load data from the server using a HTTP POST request."
@@ -794,49 +794,49 @@
 	"jqPrepend": {
 		"prefix": "jqPrepend",
 		"body": [
-			"$(${selector}).prepend(${content});"
+			"$(${1:selector}).prepend(${2:content});"
 		],
 		"description": "Insert content, specified by the parameter, to the beginning of each element in the set of matched elements."
 	},
 	"jqPrependTo": {
 		"prefix": "jqPrependTo",
 		"body": [
-			"$(${content}).prependTo(${selector});"
+			"$(${1:content}).prependTo(${2:selector});"
 		],
 		"description": "Insert every element in the set of matched elements to the beginning of the target."
 	},
 	"jqRemove": {
 		"prefix": "jqRemove",
 		"body": [
-			"$(${selector}).remove();"
+			"$(${1:selector}).remove();"
 		],
 		"description": "Remove the set of matched elements from the DOM."
 	},
 	"jqRemoveExp": {
 		"prefix": "jqRemoveExp",
 		"body": [
-			"$(${selector}).remove(${expression});"
+			"$(${1:selector}).remove(${2:expression});"
 		],
 		"description": "Remove the set of matched elements from the DOM."
 	},
 	"jqReplaceAll": {
 		"prefix": "jqReplaceAll",
 		"body": [
-			"$(${selector}).replaceAll(${target});"
+			"$(${1:selector}).replaceAll(${2:target});"
 		],
 		"description": "Replace each target element with the set of matched elements."
 	},
 	"jqReplaceWith": {
 		"prefix": "jqReplaceWith",
 		"body": [
-			"$(${selector}).replaceWith(${newContent});"
+			"$(${1:selector}).replaceWith(${2:newContent});"
 		],
 		"description": "Replace each element in the set of matched elements with the provided new content and return the set of elements that was removed."
 	},
 	"jqResize": {
 		"prefix": "jqResize",
 		"body": [
-			"$(${selector}).resize(function () { ",
+			"$(${1:selector}).resize(function () { ",
 			"\t$0",
 			"});"
 		],
@@ -845,7 +845,7 @@
 	"jqScroll": {
 		"prefix": "jqScroll",
 		"body": [
-			"$(${selector}).scroll(function () { ",
+			"$(${1:selector}).scroll(function () { ",
 			"\t$0",
 			"});"
 		],
@@ -854,35 +854,35 @@
 	"jqScrollLeftGet": {
 		"prefix": "jqScrollLeftGet",
 		"body": [
-			"$(${selector}).scrollLeft();"
+			"$(${1:selector}).scrollLeft();"
 		],
 		"description": "Get the current horizontal position of the scroll bar for the first element in the set of matched elements."
 	},
 	"jqScrollLeftSet": {
 		"prefix": "jqScrollLeftSet",
 		"body": [
-			"$(${selector}).scrollLeft(${value});"
+			"$(${1:selector}).scrollLeft(${2:value});"
 		],
 		"description": "Set the current horizontal position of the scroll bar for each of the set of matched elements."
 	},
 	"jqScrollTopGet": {
 		"prefix": "jqScrollTopGet",
 		"body": [
-			"$(${selector}).scrollTop();"
+			"$(${1:selector}).scrollTop();"
 		],
 		"description": "Get the current vertical position of the scroll bar for the first element in the set of matched elements or set the vertical position of the scroll bar for every matched element."
 	},
 	"jqScrollTopSet": {
 		"prefix": "jqScrollTopSet",
 		"body": [
-			"$(${selector}).scrollTop(${value});"
+			"$(${1:selector}).scrollTop(${2:value});"
 		],
 		"description": "Set the current vertical position of the scroll bar for each of the set of matched elements."
 	},
 	"jqSelect": {
 		"prefix": "jqSelect",
 		"body": [
-			"$(${selector}).select(function () { ",
+			"$(${1:selector}).select(function () { ",
 			"\t$0",
 			"});"
 		],
@@ -891,21 +891,21 @@
 	"jqSelectTrigger": {
 		"prefix": "jqSelectTrigger",
 		"body": [
-			"$(${selector}).select();"
+			"$(${1:selector}).select();"
 		],
 		"description": "Bind an event handler to the \"select\" JavaScript event, or trigger that event on an element."
 	},
 	"jqShow": {
 		"prefix": "jqShow",
 		"body": [
-			"$(${selector}).show();"
+			"$(${1:selector}).show();"
 		],
 		"description": "Display the matched elements."
 	},
 	"jqShowFull": {
 		"prefix": "jqShowFull",
 		"body": [
-			"$(${selector}).show(${duration}, function () {",
+			"$(${1:selector}).show(${2:duration}, function () {",
 			"\t$0",
 			"});"
 		],
@@ -914,14 +914,14 @@
 	"jqSlideDown": {
 		"prefix": "jqSlideDown",
 		"body": [
-			"$(${selector}).slideDown();"
+			"$(${1:selector}).slideDown();"
 		],
 		"description": "Display the matched elements with a sliding motion."
 	},
 	"jqSlideDownFull": {
 		"prefix": "jqSlideDownFull",
 		"body": [
-			"$(${selector}).slideDown(${duration}, function () {",
+			"$(${1:selector}).slideDown(${2:duration}, function () {",
 			"\t$0",
 			"});"
 		],
@@ -930,14 +930,14 @@
 	"jqSlideToggle": {
 		"prefix": "jqSlideToggle",
 		"body": [
-			"$(${selector}).slideToggle();"
+			"$(${1:selector}).slideToggle();"
 		],
 		"description": "Display or hide the matched elements with a sliding motion."
 	},
 	"jqSlideToggleFull": {
 		"prefix": "jqSlideToggleFull",
 		"body": [
-			"$(${selector}).slideToggle(${duration}, function () {",
+			"$(${1:selector}).slideToggle(${2:duration}, function () {",
 			"\t$0",
 			"});"
 		],
@@ -946,14 +946,14 @@
 	"jqSlideUp": {
 		"prefix": "jqSlideUp",
 		"body": [
-			"$(${selector}).slideUp();"
+			"$(${1:selector}).slideUp();"
 		],
 		"description": "Display the matched elements with a sliding motion."
 	},
 	"jqSlideUpFull": {
 		"prefix": "jqSlideUpFull",
 		"body": [
-			"$(${selector}).slideUp(${duration}, function () {",
+			"$(${1:selector}).slideUp(${2:duration}, function () {",
 			"\t$0",
 			"});"
 		],
@@ -962,7 +962,7 @@
 	"jqSubmit": {
 		"prefix": "jqSubmit",
 		"body": [
-			"$(${selector}).submit(function (e) { ",
+			"$(${1:selector}).submit(function (e) { ",
 			"\te.preventDefault();",
 			"\t$0",
 			"});"
@@ -972,35 +972,35 @@
 	"jqSubmitTrigger": {
 		"prefix": "jqSubmitTrigger",
 		"body": [
-			"$(${selector}).submit();"
+			"$(${1:selector}).submit();"
 		],
 		"description": "Bind an event handler to the \"submit\" JavaScript event, or trigger that event on an element."
 	},
 	"jqTextGet": {
 		"prefix": "jqTextGet",
 		"body": [
-			"$(${selector}).text();"
+			"$(${1:selector}).text();"
 		],
 		"description": "Get the combined text contents of each element in the set of matched elements, including their descendants."
 	},
 	"jqTextSet": {
 		"prefix": "jqTextSet",
 		"body": [
-			"$(${selector}).text(${textString});"
+			"$(${1:selector}).text(${2:textString});"
 		],
 		"description": "Set the content of each element in the set of matched elements to the specified text."
 	},
 	"jqToggle": {
 		"prefix": "jqToggle",
 		"body": [
-			"$(${selector}).toggle();"
+			"$(${1:selector}).toggle();"
 		],
 		"description": "Display or hide the matched elements."
 	},
 	"jqToggleFull": {
 		"prefix": "jqToggleFull",
 		"body": [
-			"$(${selector}).toggle(${duration}, function () {",
+			"$(${1:selector}).toggle(${2:duration}, function () {",
 			"\t$0",
 			"});"
 		],
@@ -1009,56 +1009,56 @@
 	"jqToggleSwitch": {
 		"prefix": "jqToggleSwitch",
 		"body": [
-			"$(${selector}).toggle(${showOrHide});"
+			"$(${1:selector}).toggle(${2:showOrHide});"
 		],
 		"description": "Display or hide the matched elements."
 	},
 	"jqTrigger": {
 		"prefix": "jqTrigger",
 		"body": [
-			"$(${selector}).trigger(${eventType});"
+			"$(${1:selector}).trigger(${2:eventType});"
 		],
 		"description": "Execute all handlers and behaviors attached to the matched elements for the given event type."
 	},
 	"jqTriggerHandler": {
 		"prefix": "jqTriggerHandler",
 		"body": [
-			"$(${selector}).triggerHandler(${eventType});"
+			"$(${1:selector}).triggerHandler(${2:eventType});"
 		],
 		"description": "Execute all handlers attached to an element for an event."
 	},
 	"jqTriggerHandlerWithData": {
 		"prefix": "jqTriggerHandlerWithData",
 		"body": [
-			"$(${selector}).triggerHandler(${eventType}, { ${name}: ${value} });"
+			"$(${1:selector}).triggerHandler(${2:eventType}, { ${3:name}: ${4:value} });"
 		],
 		"description": "Execute all handlers attached to an element for an event."
 	},
 	"jqTriggerWithData": {
 		"prefix": "jqTriggerWithData",
 		"body": [
-			"$(${selector}).trigger(${eventType}, { ${name}: ${value} });"
+			"$(${1:selector}).trigger(${2:eventType}, { ${3:name}: ${4:value} });"
 		],
 		"description": "Execute all handlers and behaviors attached to the matched elements for the given event type."
 	},
 	"jqUnbind": {
 		"prefix": "jqUnbind",
 		"body": [
-			"$(${selector}).unbind(${eventType});"
+			"$(${1:selector}).unbind(${2:eventType});"
 		],
 		"description": "Remove a previously-attached event handler from the elements."
 	},
 	"jqUnbindAll": {
 		"prefix": "jqUnbindAll",
 		"body": [
-			"$(${selector}).unbind();"
+			"$(${1:selector}).unbind();"
 		],
 		"description": "Remove a previously-attached event handler from the elements."
 	},
 	"jqUnload": {
 		"prefix": "jqUnload",
 		"body": [
-			"$(${selector}).unload(function () { ",
+			"$(${1:selector}).unload(function () { ",
 			"\t$0",
 			"});"
 		],
@@ -1067,49 +1067,49 @@
 	"jqValGet": {
 		"prefix": "jqValGet",
 		"body": [
-			"$(${selector}).val();"
+			"$(${1:selector}).val();"
 		],
 		"description": "Get the current value of the first element in the set of matched elements."
 	},
 	"jqValSet": {
 		"prefix": "jqValSet",
 		"body": [
-			"$(${selector}).val(${value});"
+			"$(${1:selector}).val(${2:value});"
 		],
 		"description": "Set the value of each element in the set of matched elements."
 	},
 	"jqWidthGet": {
 		"prefix": "jqWidthGet",
 		"body": [
-			"$(${selector}).width();"
+			"$(${1:selector}).width();"
 		],
 		"description": "Get the current computed width for the first element in the set of matched elements."
 	},
 	"jqWidthSet": {
 		"prefix": "jqWidthSet",
 		"body": [
-			"$(${selector}).width(${value});"
+			"$(${1:selector}).width(${2:value});"
 		],
 		"description": "Set the CSS width of each element in the set of matched elements."
 	},
 	"jqWrap": {
 		"prefix": "jqWrap",
 		"body": [
-			"$(${selector}).wrap(\"\u003c${wrappingElement}\u003e\u003c/${wrappingElement}\u003e\");"
+			"$(${1:selector}).wrap(\"<${2:wrappingElement}></${2:wrappingElement}>\");"
 		],
 		"description": "Wrap an HTML structure around each element in the set of matched elements."
 	},
 	"jqWrapAll": {
 		"prefix": "jqWrapAll",
 		"body": [
-			"$(${selector}).wrapAll(\"\u003c${wrappingElement}\u003e\u003c/${wrappingElement}\u003e\");"
+			"$(${1:selector}).wrapAll(\"<${2:wrappingElement}></${2:wrappingElement}>\");"
 		],
 		"description": "Wrap an HTML structure around all elements in the set of matched elements."
 	},
 	"jqWrapInner": {
 		"prefix": "jqWrapInner",
 		"body": [
-			"$(${selector}).wrapInner(\"\u003c${wrappingElement}\u003e\u003c/${wrappingElement}\u003e\");"
+			"$(${1:selector}).wrapInner(\"<${2:wrappingElement}></${2:wrappingElement}>\");"
 		],
 		"description": "Wrap an HTML structure around the content of each element in the set of matched elements."
 	}

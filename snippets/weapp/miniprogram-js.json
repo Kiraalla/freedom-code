@@ -2486,7 +2486,7 @@
   },
   "animation.left": {
     "prefix": "animation-left",
-    "body": ["animation.height(${1});"],
+    "body": ["animation.left(${1});"],
     "description": "左侧距离"
   },
   "animation.bottom": {
