@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const sass = require('sass');
+const cssFormatter = require('./css_formatter');
 
 class SCSSCompiler {
   constructor() {
@@ -127,244 +128,35 @@ class SCSSCompiler {
     }
   }
 
+  /**
+   * 抽出顶层注释（委托给纯函数模块，保持旧接口）。
+   * @param {string} css
+   * @param {boolean} preserveComments
+   * @returns {{ css: string, comments: string[] }}
+   */
   extractCommentsOutsideBlocks(css, preserveComments) {
-    const comments = [];
-    if (!preserveComments) {
-      return { css: css.replace(/\/\*[\s\S]*?\*\//g, ''), comments };
-    }
-
-    let out = '';
-    let i = 0;
-    let depth = 0;
-    let inString = false;
-    let stringChar = '';
-
-    while (i < css.length) {
-      const ch = css[i];
-
-      if (!inString && (ch === '"' || ch === "'")) {
-        inString = true;
-        stringChar = ch;
-        out += ch;
-        i++;
-        continue;
-      }
-
-      if (inString) {
-        out += ch;
-        if (ch === '\\') {
-          if (i + 1 < css.length) {
-            out += css[i + 1];
-            i += 2;
-            continue;
-          }
-        }
-        if (ch === stringChar) {
-          inString = false;
-          stringChar = '';
-        }
-        i++;
-        continue;
-      }
-
-      if (ch === '/' && i + 1 < css.length && css[i + 1] === '*') {
-        const start = i;
-        const endIdx = css.indexOf('*/', i + 2);
-        const end = endIdx === -1 ? css.length - 2 : endIdx + 1;
-        const comment = css.slice(start, end + 1);
-        if (depth === 0) {
-          comments.push(comment);
-          out += `__COMMENT_${comments.length - 1}__`;
-        } else {
-          // 块内注释后面如果有换行符,转换为空格
-          out += comment;
-          let nextIdx = end + 1;
-          while (nextIdx < css.length && /\s/.test(css[nextIdx])) {
-            nextIdx++;
-          }
-          if (nextIdx > end + 1) {
-            out += ' ';
-            i = nextIdx;
-            continue;
-          }
-        }
-        i = end + 1;
-        continue;
-      }
-
-      if (ch === '{') {
-        depth++;
-        out += ch;
-        i++;
-        continue;
-      }
-      if (ch === '}') {
-        depth = Math.max(0, depth - 1);
-        out += ch;
-        i++;
-        continue;
-      }
-
-      out += ch;
-      i++;
-    }
-
-    return { css: out, comments };
+    return cssFormatter.extractCommentsOutsideBlocks(css, preserveComments);
   }
 
-  parsePropertiesWithComments(properties) {
-    const tokens = [];
-    let i = 0;
-    while (i < properties.length) {
-      while (i < properties.length && /\s/.test(properties[i])) i++;
-      if (i >= properties.length) break;
-      
-      if (properties.startsWith('/*', i)) {
-        const endIdx = properties.indexOf('*/', i + 2);
-        const end = endIdx === -1 ? properties.length : endIdx + 2;
-        const comment = properties.slice(i, end);
-        
-        // 跳过注释后的空白(包括换行)
-        i = end;
-        while (i < properties.length && /\s/.test(properties[i])) i++;
-        
-        // 检查注释后面是否有属性
-        if (i < properties.length && !properties.startsWith('/*', i)) {
-          const semicolon = properties.indexOf(';', i);
-          if (semicolon !== -1) {
-            const chunk = properties.slice(i, semicolon).trim();
-            if (chunk) {
-              tokens.push({ type: 'comment', text: comment });
-              tokens.push({ type: 'prop', text: chunk });
-            }
-            i = semicolon + 1;
-            continue;
-          }
-        }
-        
-        // 注释后面没有属性,插入到最近的属性前面
-        let lastPropIdx = -1;
-        for (let j = tokens.length - 1; j >= 0; j--) {
-          if (tokens[j].type === 'prop') {
-            lastPropIdx = j;
-            break;
-          }
-        }
-        
-        if (lastPropIdx !== -1) {
-          tokens.splice(lastPropIdx, 0, { type: 'comment', text: comment });
-        } else {
-          tokens.push({ type: 'comment', text: comment });
-        }
-        i = end;
-        continue;
-      }
-
-      const semicolon = properties.indexOf(';', i);
-      if (semicolon === -1) {
-        const chunk = properties.slice(i).trim();
-        if (chunk) tokens.push({ type: 'prop', text: chunk });
-        break;
-      } else {
-        const chunk = properties.slice(i, semicolon).trim();
-        if (chunk) tokens.push({ type: 'prop', text: chunk });
-        i = semicolon + 1;
-      }
-    }
-    return tokens;
-  }
-
+  /**
+   * 紧凑排版：一条规则一行。嵌套感知 —— `@media` / `@keyframes` 内部按层缩进，
+   * 不再被压平成一行。
+   * @param {string} css
+   * @param {boolean} [preserveComments]
+   * @returns {string}
+   */
   formatCompact(css, preserveComments = false) {
-    const parsed = this.extractCommentsOutsideBlocks(css, preserveComments);
-    const comments = parsed.comments;
-    css = parsed.css;
-
-    css = css.replace(/[\n\r\t]+/g, '');
-    css = css.replace(/\*\/(?=\S)/g, '*/ ');
-    css = css.replace(/(\S)\/\*/g, '$1 /*');
-    css = css.replace(/\s*([{}:;,])\s*/g, '$1');
-
-    css = css.replace(/}/g, '}\n');
-
-    css = css.replace(/{([^}]+)}/g, (_match, properties) => {
-      properties = properties.trim();
-      if (!properties) {
-        return '{}\n';
-      }
-
-      const tokens = this.parsePropertiesWithComments(properties);
-      const parts = [];
-      tokens.forEach((t) => {
-        if (t.type === 'prop') {
-          parts.push(`${t.text};`);
-        } else {
-          // 注释保持原样,不追加分号
-          parts.push(t.text);
-        }
-      });
-
-      const formattedProperties = parts.join(' ');
-
-      return `{ ${formattedProperties} }`;
-    });
-
-    if (preserveComments) {
-      css = css.replace(/__COMMENT_(\d+)__/g, (_match, index) => {
-        return `\n${comments[parseInt(index)]}\n`;
-      });
-      css = css.replace(/\n{3,}/g, '\n\n');
-    }
-
-    return css.trim();
+    return cssFormatter.formatCompact(css, { preserveComments });
   }
 
+  /**
+   * 展开排版：每条属性一行。
+   * @param {string} css
+   * @param {boolean} [preserveComments]
+   * @returns {string}
+   */
   formatExpanded(css, preserveComments = false) {
-    const parsed = this.extractCommentsOutsideBlocks(css, preserveComments);
-    const comments = parsed.comments;
-    css = parsed.css;
-
-    css = css.replace(/[\n\r\t]+/g, '');
-    css = css.replace(/\*\/(?=\S)/g, '*/ ');
-    css = css.replace(/(\S)\/\*/g, '$1 /*');
-    css = css.replace(/\s*([{}:;,])\s*/g, '$1');
-
-    css = css.replace(/}/g, '}\n\n');
-
-    css = css.replace(/{([^}]+)}/g, (_match, properties) => {
-      properties = properties.trim();
-      if (!properties) {
-        return '{}\n';
-      }
-
-      const tokens = this.parsePropertiesWithComments(properties);
-      let formattedProperties = '';
-      for (let idx = 0; idx < tokens.length; idx++) {
-        const t = tokens[idx];
-        if (t.type === 'comment') {
-          const next = tokens[idx + 1];
-          if (next && next.type === 'prop') {
-            // 注释在属性前面
-            formattedProperties += `\n    ${t.text}  ${next.text};`;
-            idx++;
-          } else {
-            formattedProperties += `\n    ${t.text}`;
-          }
-        } else {
-          formattedProperties += `\n    ${t.text};`;
-        }
-      }
-
-      return `{${formattedProperties}\n}`;
-    });
-
-    if (preserveComments) {
-      css = css.replace(/__COMMENT_(\d+)__/g, (_match, index) => {
-        return `\n${comments[parseInt(index)]}\n`;
-      });
-      css = css.replace(/\n{3,}/g, '\n\n');
-    }
-
-    return css.trim();
+    return cssFormatter.formatExpanded(css, { preserveComments });
   }
 
   postProcessForCustomExtension(css, extension) {
