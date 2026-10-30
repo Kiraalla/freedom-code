@@ -4,7 +4,7 @@
   "description": "一个强大的 VS Code 扩展，提供多语言文件格式化、代码片段自动补全和模板文件快速创建功能",
   "icon": "./logo.jpg",
   "main": "./extension.js",
-  "version": "0.0.4",
+  "version": "0.2.4",
   "publisher": "Kiraalla",
   "homepage": "https://github.com/Kiraalla/freedom-code",
   "bugs": {
@@ -29,17 +29,21 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [
-    "onLanguage:wxml",
-    "onLanguage:html",
-    "onLanguage:css",
-    "onLanguage:scss",
-    "onLanguage:less",
-    "onLanguage:javascript",
-    "onLanguage:typescript"
-  ],
   "contributes": {
     "languages": [
+      {
+        "id": "pug",
+        "aliases": [
+          "Pug",
+          "Jade",
+          "pug"
+        ],
+        "extensions": [
+          ".pug",
+          ".jade"
+        ],
+        "configuration": "./languages/pug-language-configuration.json"
+      },
       {
         "id": "wxml",
         "extensions": [
@@ -99,6 +103,18 @@
       }
     ],
     "commands": [
+      {
+        "command": "extension.compilePug",
+        "title": "编译 Pug 为 HTML"
+      },
+      {
+        "command": "extension.pickCssFormatStyle",
+        "title": "重选 CSS 格式化模式（标准 / 紧凑）"
+      },
+      {
+        "command": "extension.syncEditorStyleSettings",
+        "title": "把格式化风格写入编辑器设置"
+      },
       {
         "command": "extension.createMiniappModule",
         "title": "创建小程序组件"
@@ -250,6 +266,16 @@
     },
     "grammars": [
       {
+        "language": "pug",
+        "scopeName": "text.pug",
+        "path": "./syntaxes/pug/pug.tmLanguage.json",
+        "embeddedLanguages": {
+          "text.html.basic": "html",
+          "source.js": "javascript",
+          "source.ts": "typescript"
+        }
+      },
+      {
         "language": "vue",
         "scopeName": "source.vue",
         "path": "./syntaxes/vue/vue-generated.json",
@@ -257,7 +283,7 @@
           "text.html.basic": "html",
           "text.html.vue-html": "vue-html",
           "text.jade.slm": "slm",
-          "text.pug": "jade",
+          "text.pug": "pug",
           "text.haml": "haml",
           "text.slim": "slim",
           "text.html.liquid": "liquid",
@@ -341,13 +367,12 @@
       }
     ],
     "configuration": {
-      "title": "Freedom Helper",
+      "title": "Freedom Code",
       "properties": {
         "freedomCode.debugMode": {
           "type": "boolean",
           "default": false,
-          "description": "是否启用调试模式（显示详细日志）",
-          "group": "basic"
+          "description": "是否启用调试模式（显示详细日志）"
         },
         "freedomCode.prettierOptions": {
           "type": "object",
@@ -360,10 +385,9 @@
             "semi": false,
             "singleQuote": false,
             "singleAttributePerLine": false,
-            "bracketSameLine": false,
+            "bracketSameLine": true,
             "htmlWhitespaceSensitivity": "ignore"
-          },
-          "group": "basic"
+          }
         },
         "freedomCode.mustacheSpacing": {
           "type": "string",
@@ -373,82 +397,139 @@
             "nospace"
           ],
           "default": "space",
-          "description": "Mustache 表达式的空格风格（{{ value }} 或 {{value}}）",
-          "group": "basic"
+          "description": "Mustache 表达式的空格风格（{{ value }} 或 {{value}}）"
         },
-
+        "freedomCode.cssFormatStyle": {
+          "type": "string",
+          "enum": [
+            "normal",
+            "compact"
+          ],
+          "default": "normal",
+          "markdownDescription": "CSS / WXSS 的排版风格：normal = 每条属性一行（Prettier 默认）；compact = 一条规则一行、属性用空格分隔。也可用命令「重选 CSS 格式化模式」切换。"
+        },
         "freedomCode.formatOnSave": {
           "type": "boolean",
           "default": false,
-          "description": "💾 保存时自动格式化（统一开关）",
-          "group": "formatting"
+          "deprecationMessage": "改用 VS Code 自带的 editor.formatOnSave：本扩展只提供格式化器，不再自带保存钩子。",
+          "description": "💾 保存时自动格式化（已废弃，请改用 editor.formatOnSave）"
         },
-
-        "freedomCode.scss-compact-autoCompile": {
+        "freedomCode.scssAutoCompile": {
+          "type": "boolean",
+          "default": false,
+          "description": "💾 保存 SCSS 文件时自动编译"
+        },
+        "freedomCode.pugAutoCompile": {
+          "type": "boolean",
+          "default": false,
+          "description": "保存 .pug 文件时自动编译为 HTML"
+        },
+        "freedomCode.pugPretty": {
           "type": "boolean",
           "default": true,
+          "description": "用 Prettier 美化编译出的 HTML（尊重项目的格式化配置）"
+        },
+        "freedomCode.pugIgnoreUnderscore": {
+          "type": "boolean",
+          "default": true,
+          "description": "跳过 _ 开头的部分文件（partial）"
+        },
+        "freedomCode.pugOutputPath": {
+          "type": "string",
+          "default": "",
+          "description": "HTML 的输出路径（留空则输出到同目录）"
+        },
+        "freedomCode.pugOutputPathFormat": {
+          "type": "string",
+          "enum": [
+            "same",
+            "custom",
+            "relative"
+          ],
+          "default": "same",
+          "description": "输出路径策略：same 同目录 / custom 自定义目录 / relative 工作区相对目录"
+        },
+        "freedomCode.pugBasedir": {
+          "type": "string",
+          "default": "",
+          "description": "pug include/extends 的基准目录（绝对路径或相对工作区，留空用文件所在目录）"
+        },
+        "freedomCode.scssIncludePaths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "SCSS 编译时额外的 @use / @import 查找路径"
+        },
+        "freedomCode.scssIgnoreUnderscoreFiles": {
+          "type": "boolean",
+          "default": true,
+          "description": "跳过 _ 开头的部分文件（partial）"
+        },
+        "freedomCode.scssOutputCompact": {
+          "type": "boolean",
+          "default": true,
+          "description": "输出紧凑格式（一条规则一行）"
+        },
+        "freedomCode.scssRemoveCharset": {
+          "type": "boolean",
+          "default": true,
+          "description": "移除输出中的 @charset 声明"
+        },
+        "freedomCode.scssOutputPathFormat": {
+          "type": "string",
+          "enum": [
+            "same",
+            "custom",
+            "relative"
+          ],
+          "default": "same",
+          "description": "输出路径策略：same 同目录 / custom 自定义目录 / relative 工作区相对目录"
+        },
+        "freedomCode.scss-compact-autoCompile": {
+          "type": "boolean",
           "description": "💾 保存 SCSS 文件时自动编译",
-          "group": "scss-compile"
+          "deprecationMessage": "已改名：请使用 scssAutoCompile。旧键仍会读取。"
         },
         "freedomCode.scssPreserveComments": {
           "type": "boolean",
           "default": false,
-          "description": "在输出的 CSS 中保留注释",
-          "group": "scss-compile"
+          "description": "在输出的 CSS 中保留注释"
         },
         "freedomCode.scssOutputExtension": {
           "type": "string",
           "default": ".css",
-          "description": "编译输出文件扩展名（如 .css、.wxss、.acss）",
-          "group": "scss-compile"
+          "description": "编译输出文件扩展名（如 .css、.wxss、.acss）"
         },
         "freedomCode.scssOutputPath": {
           "type": "string",
           "default": "",
-          "description": "CSS 文件的输出路径（留空则输出到同目录）",
-          "group": "scss-compile"
+          "description": "CSS 文件的输出路径（留空则输出到同目录）"
         },
-
-        "freedomCode.enableJQuerySnippets": {
-          "type": "boolean",
-          "default": true,
-          "description": "📦 启用 jQuery 代码块",
-          "group": "snippets"
-        },
-        "freedomCode.enableLayuiSnippets": {
-          "type": "boolean",
-          "default": true,
-          "description": "📦 启用 Layui 代码块",
-          "group": "snippets"
-        },
-        "freedomCode.enableVantSnippets": {
-          "type": "boolean",
-          "default": true,
-          "description": "📦 启用 Vant 代码块",
-          "group": "snippets"
-        },
-        "freedomCode.enableWeappSnippets": {
-          "type": "boolean",
-          "default": true,
-          "description": "📦 启用小程序代码块",
-          "group": "snippets"
-        },
-
-        "freedomCode.wxml-activeDisable": {
+        "freedomCode.wxmlActiveDisable": {
           "type": "boolean",
           "default": false,
-          "description": "🎨 禁用 WXML 标签高亮",
-          "group": "wxml-highlight"
+          "description": "🎨 禁用 WXML 标签高亮"
         },
-        "freedomCode.wxml-activeColor": {
+        "freedomCode.wxml-activeDisable": {
+          "type": "boolean",
+          "description": "🎨 禁用 WXML 标签高亮",
+          "deprecationMessage": "已改名：请使用 wxmlActiveDisable。旧键仍会读取。"
+        },
+        "freedomCode.wxmlActiveColor": {
           "type": "object",
           "description": "🎨 WXML 标签高亮颜色",
           "default": {
             "color": "#00ffff"
-          },
-          "group": "wxml-highlight"
+          }
         },
-        "freedomCode.wxml-tagNoActiveArr": {
+        "freedomCode.wxml-activeColor": {
+          "type": "object",
+          "description": "🎨 WXML 标签高亮颜色",
+          "deprecationMessage": "已改名：请使用 wxmlActiveColor。旧键仍会读取。"
+        },
+        "freedomCode.wxmlTagNoActiveArr": {
           "type": "array",
           "description": "🎨 不高亮的 WXML 标签列表",
           "markdownDescription": "**不高亮的标签列表**\n\n这些标签不会被高亮显示。\n\n> 💡 **提示**: 在 settings.json 中配置此选项",
@@ -484,11 +565,14 @@
             "official-account",
             "open-data",
             "web-vie"
-          ],
-          "group": "wxml-highlight"
+          ]
         },
-
-        "freedomCode.vue-supportedLanguages": {
+        "freedomCode.wxml-tagNoActiveArr": {
+          "type": "array",
+          "description": "🎨 不高亮的 WXML 标签列表",
+          "deprecationMessage": "已改名：请使用 wxmlTagNoActiveArr。旧键仍会读取。"
+        },
+        "freedomCode.vueSupportedLanguages": {
           "type": "array",
           "description": "🔍 Vue 定义跳转支持的语言",
           "default": [
@@ -498,10 +582,17 @@
           ],
           "items": {
             "type": "string"
-          },
-          "group": "vue-jump"
+          }
         },
-        "freedomCode.vue-targetFileExtensions": {
+        "freedomCode.vue-supportedLanguages": {
+          "type": "array",
+          "description": "🔍 Vue 定义跳转支持的语言",
+          "deprecationMessage": "已改名：请使用 vueSupportedLanguages。旧键仍会读取。",
+          "items": {
+            "type": "string"
+          }
+        },
+        "freedomCode.vueTargetFileExtensions": {
           "type": "array",
           "description": "🔍 Vue 定义跳转支持的文件扩展名",
           "default": [
@@ -511,11 +602,38 @@
           ],
           "items": {
             "type": "string"
-          },
-          "group": "vue-jump"
+          }
+        },
+        "freedomCode.vue-targetFileExtensions": {
+          "type": "array",
+          "description": "🔍 Vue 定义跳转支持的文件扩展名",
+          "deprecationMessage": "已改名：请使用 vueTargetFileExtensions。旧键仍会读取。",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
+    "jsonValidation": [
+      {
+        "fileMatch": [
+          "**/pages/**/*.json"
+        ],
+        "url": "./schemas/page.json"
+      },
+      {
+        "fileMatch": [
+          "**/components/**/*.json"
+        ],
+        "url": "./schemas/component.json"
+      },
+      {
+        "fileMatch": [
+          "app.json"
+        ],
+        "url": "./schemas/app.json"
+      }
+    ],
     "snippets": [
       {
         "language": "css",
@@ -563,10 +681,6 @@
       },
       {
         "language": "pug",
-        "path": "./snippets/basic/pug.json"
-      },
-      {
-        "language": "jade",
         "path": "./snippets/basic/pug.json"
       },
       {
@@ -622,9 +736,8 @@
   "scripts": {
     "lint": "eslint .",
     "pretest": "npm run lint",
-    "test": "vscode-test",
-    "format-samples": "node ./test/wxml_format_samples.js",
-    "test-format": "node ./test/wxml_format_samples_test.js"
+    "test": "node --test \"test/unit/**/*.test.js\"",
+    "test:integration": "vscode-test"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.6",
@@ -636,9 +749,11 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "prettier": "^3.3.2",
-    "recast": "^0.23.9",
+    "@prettier/plugin-pug": "^3.6.0",
     "htmlparser2": "^9.1.0",
+    "prettier": "^3.3.2",
+    "pug": "^3.0.4",
+    "recast": "^0.23.9",
     "sass": "^1.72.0"
   },
   "repository": {
