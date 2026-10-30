@@ -1,10 +1,17 @@
 .vscode/**
 .vscode-test/**
 test/**
+specs/**
+examples/**
+.thinkrail/**
 .gitignore
+.gitattributes
 .yarnrc
 vsc-extension-quickstart.md
 **/jsconfig.json
 **/*.map
 **/.eslintrc.json
 **/.vscode-test.*
+*.vsix
+.github/**
+**/.tmp-*
